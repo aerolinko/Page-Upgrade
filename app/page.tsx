@@ -1,6 +1,10 @@
 import Image from "next/image";
+import {Box} from "@mui/material";
+import ChartTest from "@/app/ui/ChartTest";
+import {getInventory} from "@/app/lib/db";
 
-export default function Home() {
+export default async function Home() {
+  const inventory:Array<any> = await getInventory();
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
@@ -97,7 +101,11 @@ export default function Home() {
           />
           Go to nextjs.org →
         </a>
+        <Box>
+          <ChartTest data={inventory} />
+        </Box>
       </footer>
     </div>
   );
 }
+

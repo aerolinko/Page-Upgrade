@@ -1,6 +1,6 @@
 import { db } from "./db"
 
-// Function to authenticate a user
+/*/ Function to authenticate a user
 export async function authenticateUser(email: string, password: string) {
   try {
     // In a real application, you would query your database for the user
@@ -40,6 +40,8 @@ export async function authenticateUser(email: string, password: string) {
 }
 
 // Function to get the current user from a session
+
+
 export async function getCurrentUser(userId: string) {
   try {
     const user = await db.getById("users", userId)
@@ -57,3 +59,4 @@ export async function getCurrentUser(userId: string) {
     return { success: false, error: "An error occurred while fetching the user" }
   }
 }
+*/

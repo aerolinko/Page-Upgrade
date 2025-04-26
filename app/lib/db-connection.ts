@@ -18,8 +18,6 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-export default pool;
-
 export async function query(sql: string, params?: any[]) {
   try {
     const [rows] = await pool.execute(sql, params);
@@ -29,30 +27,4 @@ export async function query(sql: string, params?: any[]) {
     throw error;
   }
 }
-
-
-// MongoDB Connection Example:
-/*
-import { MongoClient } from 'mongodb';
-
-const uri = 'mongodb://hello:hello@0.0.0.0:27017/dashboard';
-const client = new MongoClient(uri);
-
-let dbConnection: any;
-
-export async function connectToDatabase() {
-  try {
-    await client.connect();
-    dbConnection = client.db('dashboard');
-    console.log('Connected to MongoDB');
-    return dbConnection;
-  } catch (error) {
-    console.error('Could not connect to MongoDB', error);
-    throw error;
-  }
-}
-
-export function getDb() {
-  return dbConnection;
-}
-*/
+export default pool;
