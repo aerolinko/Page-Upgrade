@@ -16,3 +16,12 @@ export async function getInventory():Promise<any> {
     }
 }
 
+export async function getDates():Promise<any> {
+    try{
+        return await query('SELECT cantidad,tipodemovimiento,fecha FROM registrocompleto');
+    }
+    catch (error){
+        console.log(error);
+    }
+}
+

@@ -69,7 +69,7 @@ const SalesOverview = ({data}: { data: any[] }) => {
             tickAmount: 4,
         },
         xaxis: {
-            categories: data.map((data)=> (data.hora)),
+            categories: data.map((data)=> (data.fecha)),
             axisBorder: {
                 show: false,
             },
