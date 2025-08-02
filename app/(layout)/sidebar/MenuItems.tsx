@@ -30,7 +30,7 @@ const Menuitems = [
     id: uniqueId(),
     title: "Typography",
     icon: IconTypography,
-    href: "/utilities/typography",
+    href: "/pages",
   },
   {
     id: uniqueId(),

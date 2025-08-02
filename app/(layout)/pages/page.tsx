@@ -10,7 +10,7 @@ export default function LandingPage() {
 
         <div className="min-h-screen bg-white">
             <div>
-                hello bozo
+                hello bozoadawd
             </div>
         </div>
     )
