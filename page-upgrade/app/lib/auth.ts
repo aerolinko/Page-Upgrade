@@ -41,6 +41,7 @@ export async function updateSession(request: NextRequest){
     const parsed = await decrypt(session);
     parsed.expires = new Date(Date.now() + 10 * 1000);
     const res = NextResponse.next();
+    // @ts-ignore
     res.cookies.set({
         name: 'session',
         value: await encrypt(parsed),
@@ -48,6 +49,20 @@ export async function updateSession(request: NextRequest){
         expires: parsed.expires,
     });
     return res;
+}
+
+export async function logOut(request: NextRequest){
+    try{
+    const session = request.cookies.get('session')?.value;
+    if (!session) return;
+    (await cookies()).delete('session');
+    return NextResponse.json({result: 'Sesión Cerrada'},{status: 200});
+    }
+    catch(error){
+        console.error(error);
+        return NextResponse.json({error: 'Ocurrió un error'},
+            {status: 500});
+    }
 }
 
 export { generateSHA256Hash };

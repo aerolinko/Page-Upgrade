@@ -29,6 +29,22 @@ export default function LoginPage() {
         }
     }
 
+    async function logOut(event: { preventDefault: () => void; }) {
+        event.preventDefault();
+        setError(""); // Clear previous errors
+
+        const response = await fetch("/api/logout", {
+            method: "GET",
+            headers: {"Content-Type": "application/json"}
+        });
+
+        if (response.ok) {
+            console.log("logout successful");
+        } else {
+            setError("not logged in.");
+        }
+    }
+
 
 
     return (
@@ -67,6 +83,10 @@ export default function LoginPage() {
                         {error && <p className="text-red-500">{error}</p>}
                         <Button className="mt-1 w-full">
                             Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+                        </Button>
+
+                        <Button onClick={logOut} className="mt-1 w-full">
+                            Log Out <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
                         </Button>
 
                     </form>

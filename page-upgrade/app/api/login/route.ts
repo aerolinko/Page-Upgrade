@@ -4,8 +4,6 @@ import {cookies} from "next/headers";
 import {encrypt,generateSHA256Hash} from "@/app/lib/auth";
 export const runtime = 'nodejs';
 
-
-
 export async function POST(request: Request) {
     try{
         const { username, password } = await request.json();
