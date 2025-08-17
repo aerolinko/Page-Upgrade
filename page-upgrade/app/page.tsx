@@ -1,103 +1,97 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+import { useState } from "react";
+import { KeyIcon, UserIcon} from "@heroicons/react/24/outline";
+import {ArrowRightIcon} from "@heroicons/react/20/solid";
+import {Button} from "@/app/ui/button";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+
+export default function LoginPage() {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+
+    async function handleSubmit(event: { preventDefault: () => void; }) {
+        event.preventDefault();
+        setError(""); // Clear previous errors
+
+        const response = await fetch("/api/login", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({username, password}),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            window.location.href = `/dashboard`;
+        } else {
+            setError("Credenciales Inválidas. Intente nuevamente.");
+        }
+    }
+
+    async function logOut(event: { preventDefault: () => void; }) {
+        event.preventDefault();
+        setError(""); // Clear previous errors
+
+        const response = await fetch("/api/logout", {
+            method: "GET",
+            headers: {"Content-Type": "application/json"}
+        });
+
+        if (response.ok) {
+            console.log("logout successful");
+        } else {
+            setError("not logged in.");
+        }
+    }
+
+
+
+    return (
+
+        <div className="flex flex-col items-center justify-center min-h-screen">
+            <div className="bg-white p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-dvw max-w-sm transform transition-all duration-300 ">
+                <h1 className="text-2xl font-bold text-black mb-4">Login</h1>
+                <p className="text-sm text-gray-600 mb-6">
+
+                </p>
+                <div className="w-full">
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="Usuario"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                                className="peer block w-full rounded-md border text-gray-900 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500 "
+                            />
+                            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+
+                        </div>
+                        <div className="relative">
+                            <input
+                                type="password"
+                                placeholder="Constraseña"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                className="peer block w-full rounded-md border text-gray-900 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                            />
+                            <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                        </div>
+                        {error && <p className="text-red-500">{error}</p>}
+                        <Button className="mt-1 w-full">
+                            Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+                        </Button>
+
+                        <Button onClick={logOut} className="mt-1 w-full">
+                            Log Out <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+                        </Button>
+
+                    </form>
+                </div>
+            </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
