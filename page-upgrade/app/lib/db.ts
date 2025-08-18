@@ -22,16 +22,15 @@ export async function getUser(username: string, password: string) {
     }
 }
 
-export async function getData() {
+export async function getData(inicio: string, fin: string) {
     try{
         const query = `SELECT fecha_correcta, SUM(CASE WHEN tipodemovimiento = 'Produccion' THEN cantidad ELSE 0 END) AS produccion,
                               SUM(CASE WHEN tipodemovimiento = 'Venta' THEN cantidad ELSE 0 END) AS venta
                        FROM backup
-                       WHERE tipodemovimiento IN ('Produccion', 'Venta')
+                       WHERE tipodemovimiento IN ('Produccion', 'Venta') and fecha_correcta between ? and ?
                        GROUP BY fecha_correcta
-                       ORDER BY fecha_correcta desc
-                           limit 12`;
-        const [rows] = await pool.execute(query);
+                       ORDER BY fecha_correcta desc`;
+        const [rows] = await pool.execute(query, [fin, inicio]);
         return rows;
     }
     catch (err) {
