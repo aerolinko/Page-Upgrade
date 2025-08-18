@@ -10,7 +10,7 @@ export async function POST(request: Request) {
         const hashedpassword =await generateSHA256Hash(password);
         const result = await getUser(username, hashedpassword);
         if (result){
-            const expires = new Date(Date.now() + 10 * 1000);
+            const expires = new Date(Date.now() + 60 * 60 * 1000);
             const session = await encrypt({result, expires});
             (await cookies()).set('session', session, { expires, httpOnly: true });
             return NextResponse.json({result}, {status: 200});
