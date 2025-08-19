@@ -1,4 +1,4 @@
-import { getData } from "@/app/lib/db";
+import { getData, getAllData } from "@/app/lib/db";
 import {NextRequest, NextResponse} from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -10,6 +10,13 @@ export async function GET(request: NextRequest) {
         if (data) {
             return NextResponse.json({ status: 200, data });
         }
+        }
+        const all = request.nextUrl.searchParams.get('all');
+        if (all) {
+            const data = await getAllData();
+            if (data) {
+                return NextResponse.json({ status: 200, data });
+            }
         }
         return NextResponse.json(
             { error: 'Internal Server Error' }, { status: 500 }

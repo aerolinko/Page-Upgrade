@@ -37,3 +37,16 @@ export async function getData(inicio: string, fin: string) {
         console.error('Error executing query:', err);
     }
 }
+
+export async function getAllData() {
+    try{
+        const query = `SELECT fecha_correcta, tipodemovimiento, cantidad
+                       FROM backup
+                       ORDER BY fecha_correcta desc`;
+        const [rows] = await pool.execute(query);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
