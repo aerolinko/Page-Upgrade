@@ -63,11 +63,10 @@ export default function SideNav() {
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 } md:translate-x-0 transition-transform duration-300 ease-in-out`}
             >
-                <div className="flex flex-col h-full p-4">
-                    <div className="flex items-center mb-8 p-2">
-                        <h1 className="text-xl font-bold">MyApp</h1>
+                <div className="mt-13 md:mt-0 flex flex-col h-full p-4">
+                    <div className="flex items-center md:mb-8 mb-5 p-2">
+                        <h1 className="text-xl font-bold">Hielo Tía Ana</h1>
                     </div>
-
                     <nav className="flex-1">
                         <ul className="space-y-2">
                             {navItems.map((item) => (
@@ -89,10 +88,10 @@ export default function SideNav() {
                         </ul>
                     </nav>
 
-                    <div className="mt-auto p-2">
-                        <button onClick={logOut} className="flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
-                            <ArrowRightEndOnRectangleIcon className="h-5 w-5 mr-3" />
-                            <span>Sign Out</span>
+                    <div className="mb-15 md:mb-0">
+                        <button onClick={logOut} className="flex items-center w-full p-3 rounded-lg  hover:bg-red-500 dark:hover:bg-red-900">
+                            <ArrowRightEndOnRectangleIcon className="h-6 w-6 mr-3" />
+                            <span>Cerrar Sesión</span>
                         </button>
                     </div>
                 </div>

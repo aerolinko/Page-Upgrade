@@ -15,7 +15,8 @@ export default function Dashboard() {
   interface Movimiento {
     fecha_correcta: Date;
     cantidad: number;
-    tipodemovimiento:string
+    tipodemovimiento:string;
+    peso:string;
   }
 
   const [error, setError] = useState<string>();
@@ -40,10 +41,14 @@ export default function Dashboard() {
      sortable: true,
    },
    {
+     name: 'Peso',
+     selector: (row: Movimiento) => row.peso,
+   },
+   {
      name: 'Cantidad',
      selector: (row: Movimiento) => row.cantidad,
      sortable: true,
-   },
+   }
  ]
 
   async function fetchData() {
@@ -87,7 +92,7 @@ export default function Dashboard() {
   }, [inicio,fin]);
   return (
     <div className=" font-sans items-center justify-items-center min-h-full pb-20 gap-16 sm:p-2 ">
-      <main className="grid xl:grid-cols-2 grid-rows-1 grid-cols-1 items-center gap-16 bg-gradient-to-bl rounded-2xl">
+      <main className="mt-15 sm:mt-10 grid xl:grid-cols-2 grid-rows-1 grid-cols-1 items-center gap-10 bg-gradient-to-bl rounded-2xl">
 
         {error && (
             <div className="flex gap-4 items-center flex-col sm:flex-row text-red-500">
@@ -137,7 +142,7 @@ export default function Dashboard() {
 
 
           {data && data.length > 0 ? (
-              <div className="flex flex-col w-full bg-gray-300 rounded-2xl p-1 outline-2 outline-blue-900">
+              <div className="flex flex-col max-w-full bg-gray-300 rounded-2xl p-1.5 outline-2 outline-blue-900">
                 <input
                     type="text"
                     placeholder="Buscar..."
@@ -160,7 +165,7 @@ export default function Dashboard() {
                   }
                   }
                   paginationPerPage={5}
-                  paginationRowsPerPageOptions={[5, 10, 15, 20]}
+                  paginationRowsPerPageOptions={[5, 10, 15]}
                   highlightOnHover
                   responsive
                   noDataComponent="No hay datos disponibles"
