@@ -24,8 +24,10 @@ export async function getUser(username: string, password: string) {
 
 export async function getData(inicio: string, fin: string) {
     try{
-        const query = `SELECT fecha_correcta, SUM(CASE WHEN tipodemovimiento = 'Produccion' THEN cantidad ELSE 0 END) AS produccion,
-                              SUM(CASE WHEN tipodemovimiento = 'Venta' THEN cantidad ELSE 0 END) AS venta
+        const query = `SELECT fecha_correcta, SUM(CASE WHEN tipodemovimiento = 'Produccion' AND peso='6kg' THEN cantidad
+                                                       WHEN tipodemovimiento = 'Produccion' AND peso='3kg' THEN cantidad*0.5 ELSE 0 END) AS produccion,
+                              SUM(CASE WHEN tipodemovimiento = 'Venta' AND peso='6kg' THEN cantidad
+                                       WHEN tipodemovimiento = 'Venta' and peso='3kg' THEN cantidad*0.5 ELSE 0 END) AS venta
                        FROM backup
                        WHERE tipodemovimiento IN ('Produccion', 'Venta') and fecha_correcta between ? and ?
                        GROUP BY fecha_correcta
@@ -43,6 +45,17 @@ export async function getAllData() {
         const query = `SELECT fecha_correcta, tipodemovimiento, cantidad, peso
                        FROM backup
                        ORDER BY fecha_correcta desc`;
+        const [rows] = await pool.execute(query);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+
+export async function getStock() {
+    try{
+        const query = `SELECT SUM(Case when tipodemovimiento='Produccion' and peso='6kg' then cantidad when tipodemovimiento='Produccion' and peso='3kg' then cantidad*0.5 else 0 end) - SUM(Case when tipodemovimiento='Venta' and peso='6kg' then cantidad when tipodemovimiento='Venta' and peso='3kg' then cantidad*0.5 else 0 end) as inventario from backup`;
         const [rows] = await pool.execute(query);
         return rows;
     }

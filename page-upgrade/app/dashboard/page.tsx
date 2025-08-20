@@ -1,5 +1,5 @@
 'use client'
-import {BarChart} from "@mui/x-charts";
+import {BarChart, barClasses, barElementClasses, barLabelClasses, Gauge, gaugeClasses} from "@mui/x-charts";
 import {useState, useEffect} from "react";
 import {format} from "date-fns";
 import {es} from "date-fns/locale/es";
@@ -22,6 +22,7 @@ export default function Dashboard() {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState<boolean>();
   const [data, setData] = useState<Movimiento[]>()
+  const [stock, setStock] = useState<number>(0)
   const [inicio, setInicio] = useState<string>(format(new Date(), 'yyyy-MM-dd'))
   const [fin, setFin] = useState<string>(format(Date.now() - 7*60*60*24*1000,'yyyy-MM-dd'))
   const [dataAmountVen, setDataAmountVen] = useState<number[]>();
@@ -58,9 +59,9 @@ export default function Dashboard() {
     });
     if (response.ok) {
       const res = await response.json();
-      setDataAmountVen(res.data.map((p: Data) => p.produccion));
+      setDataAmountPro(res.data.map((p: Data) => p.produccion));
       setDataTime(res.data.map((p: Data) => p.fecha_correcta));
-      setDataAmountPro(res.data.map( (p:Data) =>p.venta));
+      setDataAmountVen(res.data.map( (p:Data) =>p.venta));
     } else {
       setError("Error obteniendo los datos del servidor");
     }
@@ -81,10 +82,26 @@ export default function Dashboard() {
 
   }
 
+  async function fetchStock() {
+    const response = await fetch(`/api/data?stock=1`, {
+      method: "GET",
+      headers: {"Content-Type": "application/json"},
+    });
+    if (response.ok) {
+      const res = await response.json();
+      console.log(res);
+      setStock(Number.parseFloat(res.data[0].inventario));
+    } else {
+      setError("Error obteniendo los datos del servidor");
+    }
+
+  }
+
 
   useEffect(() => {
     fetchData();
     fetchAllData();
+    fetchStock();
   }, []);
 
   useEffect(() => {
@@ -106,6 +123,20 @@ export default function Dashboard() {
         {dataTime && dataAmountPro && dataAmountVen ? (
             <div className="flex flex-col w-full h-full bg-gray-300 rounded-2xl p-1 outline-2 outline-blue-900">
               <BarChart
+                  /*barLabel={(item, context) => {
+                    if (!item.value || item.value == 0) {
+                      return '';
+                    }
+                    return context.bar.height < 20 ? null : item.value.toString()
+                  }}
+                  sx={{
+                    [`& .${barClasses.seriesLabels} .${barLabelClasses.root}`]:
+                        {
+                          fontWeight: 'semibold',
+                          fontSize: '12px',
+                          fill: '#D1D5DC',
+                        },
+                  }}*/
                   xAxis={[{
                     data: dataTime,
                     scaleType: 'band',
@@ -210,7 +241,31 @@ export default function Dashboard() {
               <p>Cargando tabla...</p>
           )}
 
-        <div className="w-full bg-blue-900 h-[300px] rounded-2xl p-1 outline-2 outline-blue-900">
+        <div className="w-full bg-[#D1D5DC] h-[300px] flex justify-center items-center rounded-2xl p-1 outline-2 outline-blue-900">
+          <Gauge
+          value={stock}
+          cy='70%'
+          valueMax={20000}
+          startAngle={-110}
+          endAngle={110}
+          innerRadius="70%"
+          outerRadius="90%"
+          text={({ value, valueMax }) => `${value} / ${valueMax}`}
+          sx={(theme) => ({
+            [`& .${gaugeClasses.valueText}`]: {
+            fontSize: 25,
+            fontWeight: 'semibold',
+          },
+            [`& .${gaugeClasses.valueArc}`]: {
+            fill: '#2E804D',
+          },
+            [`& .${gaugeClasses.referenceArc}`]: {
+            fill: theme.palette.text.disabled,
+          },
+          })}
+          cornerRadius='40%'
+          />
+
         </div>
         <div className="w-full bg-blue-900 h-[300px] rounded-2xl p-1 outline-2 outline-blue-900">
         </div>
