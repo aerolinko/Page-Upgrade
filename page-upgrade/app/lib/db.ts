@@ -55,7 +55,21 @@ export async function getAllData() {
 
 export async function getStock() {
     try{
-        const query = `SELECT SUM(Case when tipodemovimiento='Produccion' and peso='6kg' then cantidad when tipodemovimiento='Produccion' and peso='3kg' then cantidad*0.5 else 0 end) - SUM(Case when tipodemovimiento='Venta' and peso='6kg' then cantidad when tipodemovimiento='Venta' and peso='3kg' then cantidad*0.5 else 0 end) as inventario from backup`;
+        const query = `SELECT SUM(Case when tipodemovimiento='Produccion' then cantidad else 0 end) - 
+       SUM(Case when tipodemovimiento='Venta' then cantidad else 0 end) as inventario from backup`;
+        const [rows] = await pool.execute(query);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+
+export async function getStockComponents() {
+    try{
+        const query = `SELECT SUM(Case when tipodemovimiento='Produccion' and peso='6kg' then cantidad else 0 end) - 
+       SUM(Case when tipodemovimiento='Venta' and peso='6kg' then cantidad else 0 end) as peso_6kg, SUM(Case when tipodemovimiento='Produccion' and peso='3kg' then cantidad else 0 end) -
+            SUM(Case when tipodemovimiento='Venta' and peso='3kg' then cantidad else 0 end) as peso_3kg from backup`;
         const [rows] = await pool.execute(query);
         return rows;
     }

@@ -1,4 +1,4 @@
-import {getData, getAllData, getStock} from "@/app/lib/db";
+import {getData, getAllData, getStock, getStockComponents} from "@/app/lib/db";
 import {NextRequest, NextResponse} from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -24,6 +24,14 @@ export async function GET(request: NextRequest) {
         const stock = request.nextUrl.searchParams.get('stock');
         if (stock) {
             const data = await getStock();
+            if (data) {
+                return NextResponse.json({ status: 200, data });
+            }
+        }
+
+        const stockComponent = request.nextUrl.searchParams.get('stockComponent');
+        if (stockComponent) {
+            const data = await getStockComponents();
             if (data) {
                 return NextResponse.json({ status: 200, data });
             }
