@@ -14,6 +14,7 @@ import {useState, useEffect} from "react";
 import {format} from "date-fns";
 import {es} from "date-fns/locale/es";
 import DataTable from "react-data-table-component";
+import {redirect} from "next/navigation";
 
 export default function Dashboard() {
   interface Data {
@@ -80,6 +81,7 @@ export default function Dashboard() {
       setDataTime(res.data.map((p: Data) => p.fecha_correcta));
       setDataAmountVen(res.data.map( (p:Data) =>p.venta));
     } else {
+      forceExpiredLogOut(response);
       setError("Error obteniendo los datos del servidor");
     }
 
@@ -94,6 +96,7 @@ export default function Dashboard() {
       const res = await response.json();
       setData(res.data);
     } else {
+      forceExpiredLogOut(response);
       setError("Error obteniendo los datos del servidor");
     }
 
@@ -114,6 +117,7 @@ export default function Dashboard() {
         setStockMax(20000);
       }
     } else {
+      forceExpiredLogOut(response);
       setError("Error obteniendo los datos del servidor");
     }
 
@@ -128,9 +132,16 @@ export default function Dashboard() {
       const res = await response.json();
       setStockComponents(res.data[0]);
     } else {
+      forceExpiredLogOut(response);
       setError("Error obteniendo los datos del servidor");
     }
 
+  }
+
+  function forceExpiredLogOut(res: Response) {
+   if (res.status === 401) {
+     redirect('/');
+   }
   }
 
   useEffect(() => {
