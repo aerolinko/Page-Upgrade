@@ -5,14 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06f2f60d-9913-4629-ac74-68815be4784a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/page-upgrade/app/(sidenav)/manejo_de_inventario/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page-upgrade/app/api/data/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/api/data/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page-upgrade/app/dashboard/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/(sidenav)/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page-upgrade/app/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/(sidenav)/dashboard/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page-upgrade/app/lib/db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/lib/db.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page-upgrade/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page-upgrade/app/ui/SideNav.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/ui/SideNav.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/page-upgrade/app/(sidenav)/manejo_de_inventario/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/(sidenav)/manejo_de_inventario/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +75,7 @@
       <workItem from="1755723949004" duration="10000" />
       <workItem from="1755899825189" duration="9028000" />
       <workItem from="1755993219408" duration="248000" />
-      <workItem from="1756146813296" duration="11162000" />
+      <workItem from="1756146813296" duration="11687000" />
     </task>
     <servers />
   </component>

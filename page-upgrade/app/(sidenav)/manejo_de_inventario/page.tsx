@@ -33,6 +33,7 @@ export default function Dashboard() {
   }
 
   const [error, setError] = useState<string>();
+  const [mensaje, setMensaje] = useState<string>();
   const [cantidad, setCantidad] = useState<string>('0');
   const [peso, setPeso] = useState<string>('');
   const [isSelected, setIsSelected] = useState<boolean>(false);
@@ -49,6 +50,9 @@ export default function Dashboard() {
     });
     if (response.ok) {
       const res = await response.json();
+      setMensaje('Se ha guardado exitosamente');
+      setTimeout(() => setMensaje(''), 2000);
+      reset();
     } else {
       forceExpiredLogOut(response);
       setError("Error obteniendo los datos del servidor");
@@ -63,6 +67,14 @@ export default function Dashboard() {
      else return e.target.value;
   }
 
+  function reset(){
+    setError('');
+    setCantidad("0");
+    setPeso("");
+    setIsZero(true);
+    setIsSelected(false);
+  }
+
   function forceExpiredLogOut(res: Response) {
    if (res.status === 401) {
      redirect('/');
@@ -75,18 +87,9 @@ export default function Dashboard() {
   return (
       <div className="flex flex-col items-center justify-center min-h-full">
         <main className=" m-10 bg-gray-700 p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-full  sm:max-w-sm min-w-xs transform transition-all duration-300 ">
-
-        {error && (
-            <div className="flex gap-4 items-center flex-col sm:flex-row text-red-500">
-              <a>
-                {error}
-              </a>
-            </div>
-        )
-        }
         <div className="w-full">
         <form onSubmit={handleSubmit} id='produccion' className="flex flex-col gap-3">
-          <label htmlFor='produccion' className='text-2xl p-1'> Producción</label>
+          <label htmlFor='produccion' className='text-2xl font-semibold p-1'>Agregar Producción</label>
           <label htmlFor='candidad'> Cantidad a guardar </label>
           <div className="relative">
             <input
@@ -122,7 +125,23 @@ export default function Dashboard() {
             </select>
             <ScaleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-white" />
           </div>
+          {error && (
+              <div className="flex gap-4 mt-2 items-center flex-col sm:flex-row text-red-500">
+                <a>
+                  {error}
+                </a>
+              </div>
+          )
+          }
 
+          {mensaje && (
+              <div className="flex gap-4 mt-2 items-center flex-col sm:flex-row text-green-500">
+                <a>
+                  {mensaje}
+                </a>
+              </div>
+          )
+          }
           <Button className="mt-4 w-full">
             Crear <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
           </Button>
