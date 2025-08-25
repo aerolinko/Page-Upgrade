@@ -28,6 +28,7 @@ export default function Dashboard() {
     cantidad: number;
     tipodemovimiento:string;
     peso:string;
+    hora:string;
   }
 
   interface StockComponent {
@@ -53,6 +54,11 @@ export default function Dashboard() {
      name: 'Fecha',
      selector: (row: Movimiento) => format(new Date(row.fecha_correcta), 'dd/MM/yyyy'),
      sortable: true,
+     sortFunction: (rowA: Movimiento, rowB: Movimiento) => {
+       const dateA = new Date(rowA.fecha_correcta).getTime();
+       const dateB = new Date(rowB.fecha_correcta).getTime();
+       return dateA - dateB;
+     },
    },
    {
      name: 'Movimiento',
@@ -60,14 +66,18 @@ export default function Dashboard() {
      sortable: true,
    },
    {
+     name: 'Cantidad',
+     selector: (row: Movimiento) => row.cantidad,
+     sortable: true,
+   },
+   {
      name: 'Peso',
      selector: (row: Movimiento) => row.peso,
    },
    {
-     name: 'Cantidad',
-     selector: (row: Movimiento) => row.cantidad,
-     sortable: true,
-   }
+     name: 'Hora',
+     selector: (row: Movimiento) => row.hora,
+   },
  ]
 
   async function fetchData() {
@@ -230,8 +240,9 @@ export default function Dashboard() {
                   data={data.filter(item =>
                       format(item.fecha_correcta, 'dd/MM/yyyy').includes(filterText.toLowerCase().trim()) ||
                       item.tipodemovimiento.toLowerCase().includes(filterText.toLowerCase().trim()) ||
-                      item.cantidad.toString().includes(filterText)
+                      item.cantidad.toString().includes(filterText) || item.hora.toString().trim().includes(filterText.toLowerCase().trim())
                   )}
+                  //Might be a good idea to add a sort for the types (peso) of the bags
                   pagination
                   paginationComponentOptions={{
                     rowsPerPageText:"Entradas por página",
@@ -245,6 +256,11 @@ export default function Dashboard() {
                   noDataComponent="No hay datos disponibles"
                   progressPending={!data.length}
                   customStyles={{
+                    tableWrapper: {
+                      style:{
+                        overflowX: 'auto',
+                      }
+                    },
                     headRow: {
                       style: {
                         backgroundColor: '#99A1AF',
@@ -255,6 +271,7 @@ export default function Dashboard() {
                       style: {
                         backgroundColor: '#99A1AF',
                         fontWeight: 'bold',
+                        minWidth: '589px',
                       },
                       highlightOnHoverStyle:{
                         backgroundColor: '#D1D5DC',

@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06f2f60d-9913-4629-ac74-68815be4784a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/page-upgrade/app/(sidenav)/manejo_de_inventario/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page-upgrade/app/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/page-upgrade/app/api/data/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/api/data/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/page-upgrade/app/dashboard/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/(sidenav)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/page-upgrade/app/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/(sidenav)/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/page-upgrade/app/lib/db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/lib/db.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/page-upgrade/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/page-upgrade/app/ui/SideNav.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/ui/SideNav.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,29 +30,35 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/cesar/Documents/GitHub/Page-Upgrade/page-upgrade/app/api/logout&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_interpreter_path&quot;: &quot;C:/Users/cesar/AppData/Roaming/JetBrains/IntelliJIdea2025.1/node/versions/22.16.0/node&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\cesar\\Documents\\GitHub\\Page-Upgrade\\page-upgrade\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Users/cesar/Documents/GitHub/Page-Upgrade/page-upgrade/app/(sidenav)/manejo_de_inventario",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "C:/Users/cesar/AppData/Roaming/JetBrains/IntelliJIdea2025.1/node/versions/22.16.0/node",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "settings.nodejs",
+    "ts.external.directory.path": "C:\\Users\\cesar\\Documents\\GitHub\\Page-Upgrade\\page-upgrade\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\cesar\Documents\GitHub\Page-Upgrade\page-upgrade\app\(sidenav)\manejo_de_inventario" />
+      <recent name="C:\Users\cesar\Documents\GitHub\Page-Upgrade\page-upgrade\app\(sidenav)\dashboard" />
+      <recent name="C:\Users\cesar\Documents\GitHub\Page-Upgrade\page-upgrade\app\(sidenav)" />
       <recent name="C:\Users\cesar\Documents\GitHub\Page-Upgrade\page-upgrade\app\api\logout" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\cesar\Documents\GitHub\Page-Upgrade\page-upgrade\app\(sidenav)" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -69,6 +81,7 @@
       <workItem from="1755723949004" duration="10000" />
       <workItem from="1755899825189" duration="9028000" />
       <workItem from="1755993219408" duration="248000" />
+      <workItem from="1756146813296" duration="11162000" />
     </task>
     <servers />
   </component>

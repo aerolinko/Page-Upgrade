@@ -21,9 +21,9 @@ export default function RootLayout({
         <div className={`${inter.className} bg-radial from-yellow-50 to-white dark:from-blue-950 dark:to-black`}>
         <div className="flex h-screen w-screen">
             <SideNav />
-            <main className="flex-1 overflow-auto md:ml-64 p-6">
+            <div className="flex-1 overflow-auto md:ml-64 p-6">
                 {children}
-            </main>
+            </div>
         </div>
         </div>
 

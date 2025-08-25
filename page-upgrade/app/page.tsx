@@ -29,22 +29,6 @@ export default function LoginPage() {
         }
     }
 
-    async function logOut(event: { preventDefault: () => void; }) {
-        event.preventDefault();
-        setError(""); // Clear previous errors
-
-        const response = await fetch("/api/logout", {
-            method: "GET",
-            headers: {"Content-Type": "application/json"}
-        });
-
-        if (response.ok) {
-            console.log("logout successful");
-        } else {
-            setError("not logged in.");
-        }
-    }
-
 
 
     return (
@@ -52,9 +36,11 @@ export default function LoginPage() {
         <div className="flex flex-col items-center justify-center min-h-screen">
             <div className="bg-white p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-dvw max-w-sm transform transition-all duration-300 ">
                 <h1 className="text-2xl font-bold text-black mb-4">Login</h1>
-                <p className="text-sm text-gray-600 mb-6">
-
+                {error &&
+                <p className="text-sm text-red-600 mb-6">
+                    {error}
                 </p>
+                }
                 <div className="w-full">
                     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
                         <div className="relative">
@@ -69,7 +55,7 @@ export default function LoginPage() {
                             <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
 
                         </div>
-                        <div className="relative">
+                        <div className="relative mb-6">
                             <input
                                 type="password"
                                 placeholder="Constraseña"
@@ -80,15 +66,10 @@ export default function LoginPage() {
                             />
                             <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
                         </div>
-                        {error && <p className="text-red-500">{error}</p>}
+
                         <Button className="mt-1 w-full">
                             Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
                         </Button>
-
-                        <Button onClick={logOut} className="mt-1 w-full">
-                            Log Out <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
-                        </Button>
-
                     </form>
                 </div>
             </div>

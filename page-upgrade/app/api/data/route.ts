@@ -1,4 +1,4 @@
-import {getData, getAllData, getStock, getStockComponents} from "@/app/lib/db";
+import {getData, getAllData, getStock, getStockComponents, guardarProduccion} from "@/app/lib/db";
 import {NextRequest, NextResponse} from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -46,4 +46,28 @@ export async function GET(request: NextRequest) {
             { error: 'Internal Server Error' }, { status: 500 }
         );
     }
+}
+
+
+export async function POST(request: NextRequest) {
+    try{
+        const req = await request.json();
+        const  peso = req.peso;
+        const cantidad = req.cantidad;
+        if (req) {
+            await guardarProduccion('Produccion',cantidad,peso);
+            return NextResponse.json({ status: 200 });
+        }
+        return NextResponse.json(
+            { error: 'Internal Server Error' }, { status: 500 }
+        );
+    }
+    catch (error) {
+        console.error('error:', error);
+        return NextResponse.json(
+            { error: 'Internal Server Error' }, { status: 500 }
+        );
+    }
+
+
 }

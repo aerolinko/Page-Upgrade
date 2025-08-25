@@ -4,17 +4,16 @@ import {
     Bars3Icon,
     XMarkIcon,
     HomeIcon,
-    UserIcon,
     CogIcon,
     DocumentTextIcon,
-    ArrowRightEndOnRectangleIcon
+    ArrowRightEndOnRectangleIcon, BuildingStorefrontIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import {redirect, usePathname} from 'next/navigation';
 
 const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
-    { name: 'Profile', href: '/profile', icon: UserIcon },
+    { name: 'Manejo de Inventario', href: '/manejo_de_inventario', icon: BuildingStorefrontIcon },
     { name: 'Documents', href: '/documents', icon: DocumentTextIcon },
     { name: 'Settings', href: '/settings', icon: CogIcon },
 ];
