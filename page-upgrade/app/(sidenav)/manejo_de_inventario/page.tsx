@@ -2,154 +2,104 @@
 import {useState, useEffect} from "react";
 import {redirect} from "next/navigation";
 import {
-  ArrowUpCircleIcon,
-  ArrowUpOnSquareIcon,
-  ArrowUpOnSquareStackIcon, EqualsIcon,
-  KeyIcon, ScaleIcon,
-  UserIcon
+  ArrowDownOnSquareIcon, ArrowLeftIcon, ArrowUpOnSquareIcon,
 } from "@heroicons/react/24/outline";
 import {Button} from "@/app/ui/button";
-import {ArrowRightIcon} from "@heroicons/react/20/solid";
-import {Select} from "@mui/material";
-import {Open_Sans} from "next/dist/compiled/@next/font/dist/google";
+import Produccion from "@/app/ui/produccion";
+import Venta from "@/app/ui/venta";
 
 export default function Dashboard() {
-  interface Data {
-    produccion: number;
-    fecha_correcta: Date;
-    venta: number;
-  };
-
-  interface Movimiento {
-    fecha_correcta: Date;
-    cantidad: number;
-    tipodemovimiento:string;
-    peso:string;
-  }
-
-  interface StockComponent {
-    peso_3kg: number;
-    peso_6kg: number;
-  }
-
-  const [error, setError] = useState<string>();
-  const [mensaje, setMensaje] = useState<string>();
-  const [cantidad, setCantidad] = useState<string>('0');
-  const [peso, setPeso] = useState<string>('');
-  const [isSelected, setIsSelected] = useState<boolean>(false);
-  const [isZero, setIsZero] = useState<boolean>(true);
-
-
-  const handleSubmit = async (event: { preventDefault: () => void; }) => {
-    event.preventDefault();
-    console.log('1212')
-    const response = await fetch(`/api/data`, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({cantidad, peso})
-    });
-    if (response.ok) {
-      const res = await response.json();
-      setMensaje('Se ha guardado exitosamente');
-      setTimeout(() => setMensaje(''), 2000);
-      reset();
-    } else {
-      forceExpiredLogOut(response);
-      setError("Error obteniendo los datos del servidor");
-    }
-
-  }
-
-  function limitNumericInput(e: React.ChangeEvent<HTMLInputElement>, max:number){
-     if(parseInt(e.target.value) > max){
-       return max.toString();
-     }
-     else return e.target.value;
-  }
-
-  function reset(){
-    setError('');
-    setCantidad("0");
-    setPeso("");
-    setIsZero(true);
-    setIsSelected(false);
-  }
-
-  function forceExpiredLogOut(res: Response) {
-   if (res.status === 401) {
-     redirect('/');
-   }
-  }
-
-  useEffect(() => {
-  }, []);
+  const [isProduccion, setIsProduccion] = useState(false);
+  const [isVenta, setIsVenta] = useState(false);
 
   return (
+
       <div className="flex flex-col items-center justify-center min-h-full">
-        <main className=" m-10 bg-gray-700 p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-full  sm:max-w-sm min-w-xs transform transition-all duration-300 ">
-        <div className="w-full">
-        <form onSubmit={handleSubmit} id='produccion' className="flex flex-col gap-3">
-          <label htmlFor='produccion' className='text-2xl font-semibold p-1'>Agregar Producción</label>
-          <label htmlFor='candidad'> Cantidad a guardar </label>
-          <div className="relative">
-            <input
-                id="cantidad"
-                type="number"
-                min="1"
-                max="1000"
-                value={cantidad}
-                onClick={()=>{setCantidad("")}}
-                onBlur={()=>{
-                  if(isZero){
-                    setCantidad("0")
-                  }
-                }}
-                onChange={(e) => {
-                  setCantidad(limitNumericInput(e,1000));
-                  setIsZero(false)
-                }}
-                required
-                className={`[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none peer block w-full rounded-md border ${isZero ? 'text-gray-400' : 'text-blue-300'} border-white py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
-            />
-            <ArrowUpCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-white" />
-          </div>
-          <label htmlFor='peso'> Peso </label>
-          <div className="relative">
-            <select value={peso} required className={`peer block w-full rounded-md border border-white py-[9px] pl-10 text-sm outline-2 ${isSelected ? 'text-blue-300': 'text-gray-400 italic'}`}
-                    id='peso'
-                    onChange={(e) => {setPeso(e.target.value); setIsSelected(true)}}
-            >
-              <option value="" disabled hidden>--Elige un peso--</option>
-              <option value='6kg' className='bg-gray-700'>6kg</option>
-              <option value='3kg' className='bg-gray-700'>3kg</option>
-            </select>
-            <ScaleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-white" />
-          </div>
-          {error && (
-              <div className="flex gap-4 mt-2 items-center flex-col sm:flex-row text-red-500">
-                <a>
-                  {error}
-                </a>
-              </div>
-          )
-          }
 
-          {mensaje && (
-              <div className="flex gap-4 mt-2 items-center flex-col sm:flex-row text-green-500">
-                <a>
-                  {mensaje}
-                </a>
-              </div>
-          )
-          }
-          <Button className="mt-4 w-full">
-            Crear <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+        {isProduccion && (
+        <main className=" m-10 bg-gray-700 p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-[350px]  sm:max-w-sm min-w-xs transform transition-all duration-300 ">
+          <Produccion/>
+          <Button onClick={()=>{
+            setIsProduccion(false)
+          }} className="mt-4 w-fit bg-gray-800 hover:bg-gray-500">
+            <ArrowLeftIcon className="mr-2 h-5 w-5 text-gray-50" />
+            Regresar
           </Button>
-        </form>
-    </div>
-
-
       </main>
+        )}
+
+
+        {isVenta && (
+            <main className=" m-10 bg-gray-700 p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-[350px]  sm:max-w-sm min-w-xs transform transition-all duration-300 ">
+              <Venta/>
+              <Button onClick={()=>{
+                setIsVenta(false)
+              }} className="mt-4 w-fit bg-gray-800 hover:bg-gray-500">
+                <ArrowLeftIcon className="mr-2 h-5 w-5 text-gray-50" />
+                Regresar
+              </Button>
+            </main>
+        )}
+
+
+
+        {!isProduccion && !isVenta && (
+      <div className="flex xl:flex-row flex-col w-fit gap-10">
+
+          <div className='group relative flex sm:w-[400px] w-[250px] flex-col items-center justify-center p-6 rounded-xl transition-all duration-300
+           bg-gray-700 border border-gray-200 shadow-sm hover:shadow-lg hover:border-blue-500 hover:bg-blue-50
+             h-full min-h-[180px] cursor-pointer'
+               onClick={()=>{
+                 setIsProduccion(true);
+               }}
+          >
+            <div className='absolute top-4 right-4 w-2 h-2 rounded-full bg-blue-500 opacity-0 group-hover:opacity-100
+                 transition-opacity duration-300' />
+            <div className="flex flex-col items-center justify-between gap-3">
+              <div className="flex flex-col items-center gap-3">
+                <div className='p-3 rounded-full bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300'>
+                  <ArrowDownOnSquareIcon className="w-6 h-6" />
+                </div>
+
+                <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+
+                </h3>
+              </div>
+
+              <p className="text-sm text-gray-200 group-hover:text-blue-500 transition-colors">
+                Manejo de la Producción
+              </p>
+            </div>
+          </div>
+
+                <div className='group relative sm:w-[400px] w-[250px] flex flex-col items-center justify-center p-6 rounded-xl transition-all duration-300
+           bg-gray-700 border border-gray-200 shadow-sm hover:shadow-lg hover:border-blue-500 hover:bg-blue-50
+             h-full min-h-[180px] cursor-pointer'
+                     onClick={()=>{
+                       setIsVenta(true);
+                     }}
+                >
+                  <div className='absolute top-4 right-4 w-2 h-2 rounded-full bg-blue-500 opacity-0 group-hover:opacity-100
+                 transition-opacity duration-300' />
+                  <div className="flex flex-col items-center justify-between gap-3">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className='p-3 rounded-full bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300'>
+                        <ArrowUpOnSquareIcon className="w-6 h-6" />
+                      </div>
+
+                      <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+
+                      </h3>
+                    </div>
+
+                    <p className="text-sm text-gray-200 group-hover:text-blue-500 transition-colors">
+                      Manejo de las Ventas
+                    </p>
+                  </div>
+          </div>
+      </div>
+        )}
+
     </div>
   );
 }
