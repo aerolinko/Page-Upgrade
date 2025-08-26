@@ -28,9 +28,9 @@ export async function getUser(username: string, password: string) {
 export async function getData(inicio: string, fin: string) {
     try{
         const query = `SELECT fecha_correcta, SUM(CASE WHEN tipodemovimiento = 'Produccion' AND peso='6kg' THEN cantidad
-                                                       WHEN tipodemovimiento = 'Produccion' AND peso='3kg' THEN cantidad*0.5 ELSE 0 END) AS produccion,
-                              SUM(CASE WHEN tipodemovimiento = 'Venta' AND peso='6kg' THEN cantidad
-                                       WHEN tipodemovimiento = 'Venta' and peso='3kg' THEN cantidad*0.5 ELSE 0 END) AS venta
+                       WHEN tipodemovimiento = 'Produccion' AND peso='3kg' THEN cantidad*0.5 ELSE 0 END) AS produccion,
+                       SUM(CASE WHEN tipodemovimiento = 'Venta' AND peso='6kg' THEN cantidad
+                       WHEN tipodemovimiento = 'Venta' and peso='3kg' THEN cantidad*0.5 ELSE 0 END) AS venta
                        FROM registrocompleto
                        WHERE tipodemovimiento IN ('Produccion', 'Venta') and fecha_correcta between ? and ?
                        GROUP BY fecha_correcta
@@ -59,7 +59,7 @@ export async function getAllData() {
 export async function getStock() {
     try{
         const query = `SELECT SUM(Case when tipodemovimiento='Produccion' then cantidad else 0 end) - 
-       SUM(Case when tipodemovimiento='Venta' then cantidad else 0 end) as inventario from registrocompleto`;
+                       SUM(Case when tipodemovimiento='Venta' then cantidad else 0 end) as inventario from registrocompleto`;
         const [rows] = await pool.execute(query);
         return rows;
     }
@@ -71,8 +71,8 @@ export async function getStock() {
 export async function getStockComponents() {
     try{
         const query = `SELECT SUM(Case when tipodemovimiento='Produccion' and peso='6kg' then cantidad else 0 end) - 
-       SUM(Case when tipodemovimiento='Venta' and peso='6kg' then cantidad else 0 end) as peso_6kg, SUM(Case when tipodemovimiento='Produccion' and peso='3kg' then cantidad else 0 end) -
-            SUM(Case when tipodemovimiento='Venta' and peso='3kg' then cantidad else 0 end) as peso_3kg from registrocompleto`;
+                       SUM(Case when tipodemovimiento='Venta' and peso='6kg' then cantidad else 0 end) as peso_6kg, SUM(Case when tipodemovimiento='Produccion' and peso='3kg' then cantidad else 0 end) -
+                       SUM(Case when tipodemovimiento='Venta' and peso='3kg' then cantidad else 0 end) as peso_3kg from registrocompleto`;
         const [rows] = await pool.execute(query);
         return rows;
     }
@@ -83,8 +83,6 @@ export async function getStockComponents() {
 
 export async function guardarProduccion(tipodemovimiento:string, cantidad:number, peso:number) {
     try{
-
-
         const date = new Date();
         const formattedTime = new Intl.DateTimeFormat('en-US', {
             hour: '2-digit',
@@ -93,8 +91,8 @@ export async function guardarProduccion(tipodemovimiento:string, cantidad:number
         }).format(date).replace(/\bAM\b/gi, 'a.m.').replace(/\bPM\b/gi, 'p.m.');
         const formattedDate= format(date,'yyyy-MM-dd');
 
-
-        const query = `INSERT INTO registrocompleto (tipodemovimiento,cantidad,peso,hora,fecha_correcta) VALUES (?,?,?,?,?)`;
+        const query = `INSERT INTO registrocompleto (tipodemovimiento,cantidad,peso,hora,fecha_correcta) 
+                       VALUES (?,?,?,?,?)`;
         const [rows,fields] = await pool.execute(query,[tipodemovimiento,cantidad,peso,formattedTime,formattedDate]);
         return rows;
     }

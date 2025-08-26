@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06f2f60d-9913-4629-ac74-68815be4784a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/page-upgrade/app/ui/produccion.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/page-upgrade/app/ui/venta.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/page-upgrade/app/(sidenav)/manejo_de_inventario/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/(sidenav)/manejo_de_inventario/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/page-upgrade/app/lib/db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/page-upgrade/app/lib/db.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +16,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 1
@@ -44,6 +46,11 @@
     "settings.editor.selected.configurable": "settings.nodejs",
     "ts.external.directory.path": "C:\\Users\\cesar\\Documents\\GitHub\\Page-Upgrade\\page-upgrade\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
