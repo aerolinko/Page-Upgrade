@@ -45,14 +45,12 @@ export async function getData(inicio: string, fin: string) {
 
 export async function getOnly3kg(inicio: string, fin: string) {
     try{
-        const query = `SELECT fecha_correcta, SUM(CASE WHEN tipodemovimiento = 'Produccion' AND peso='3kg' THEN cantidad
-                                                       ELSE 0 END) AS produccion,
-                              SUM(CASE WHEN tipodemovimiento = 'Venta' AND peso='3kg' THEN cantidad
-                                       ELSE 0 END) AS venta
+        const query = `Select * from (SELECT fecha_correcta, SUM(CASE WHEN tipodemovimiento = 'Produccion' AND peso='3kg' THEN cantidad END) AS produccion,
+                              SUM(CASE WHEN tipodemovimiento = 'Venta' AND peso='3kg' THEN cantidad END) AS venta
                        FROM registrocompleto
                        WHERE tipodemovimiento IN ('Produccion', 'Venta') and fecha_correcta between ? and ?
                        GROUP BY fecha_correcta
-                       ORDER BY fecha_correcta desc`;
+                       ORDER BY fecha_correcta desc) as T where produccion is not null or venta is not null order by fecha_correcta desc`;
         const [rows] = await pool.execute(query, [fin, inicio]);
         return rows;
     }
@@ -63,14 +61,12 @@ export async function getOnly3kg(inicio: string, fin: string) {
 
 export async function getOnly6kg(inicio: string, fin: string) {
     try{
-        const query = `SELECT fecha_correcta, SUM(CASE WHEN tipodemovimiento = 'Produccion' AND peso='6kg' THEN cantidad
-                       ELSE 0 END) AS produccion,
-                       SUM(CASE WHEN tipodemovimiento = 'Venta' AND peso='6kg' THEN cantidad
-                       ELSE 0 END) AS venta
-                       FROM registrocompleto
-                       WHERE tipodemovimiento IN ('Produccion', 'Venta') and fecha_correcta between ? and ?
-                       GROUP BY fecha_correcta
-                       ORDER BY fecha_correcta desc`;
+        const query = `Select * from (SELECT fecha_correcta, SUM(CASE WHEN tipodemovimiento = 'Produccion' AND peso='6kg' THEN cantidad END) AS produccion,
+                                             SUM(CASE WHEN tipodemovimiento = 'Venta' AND peso='6kg' THEN cantidad END) AS venta
+                                      FROM registrocompleto
+                                      WHERE tipodemovimiento IN ('Produccion', 'Venta') and fecha_correcta between ? and ?
+                                      GROUP BY fecha_correcta
+                                      ORDER BY fecha_correcta desc) as T where produccion is not null or venta is not null order by fecha_correcta desc`;
         const [rows] = await pool.execute(query, [fin, inicio]);
         return rows;
     }
