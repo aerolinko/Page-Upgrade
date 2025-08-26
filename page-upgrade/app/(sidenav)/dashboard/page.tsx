@@ -1,12 +1,8 @@
 'use client'
 import {
   BarChart,
-  barClasses,
-  barElementClasses,
-  barLabelClasses,
   Gauge,
   gaugeClasses,
-  labelMarkClasses,
   pieArcLabelClasses,
   PieChart
 } from "@mui/x-charts";
@@ -15,14 +11,15 @@ import {format} from "date-fns";
 import {es} from "date-fns/locale/es";
 import DataTable from "react-data-table-component";
 import {redirect} from "next/navigation";
+import {Button} from "@/app/ui/button";
+import {ScaleIcon} from "@heroicons/react/24/outline";
 
 export default function Dashboard() {
   interface Data {
     produccion: number;
     fecha_correcta: Date;
     venta: number;
-  };
-
+  }
   interface Movimiento {
     fecha_correcta: Date;
     cantidad: number;
@@ -30,24 +27,24 @@ export default function Dashboard() {
     peso:string;
     hora:string;
   }
-
   interface StockComponent {
     peso_3kg: number;
     peso_6kg: number;
   }
 
-  const [error, setError] = useState<string>();
-  const [loading, setLoading] = useState<boolean>();
+  const [error, setError] = useState<string>()
   const [data, setData] = useState<Movimiento[]>()
   const [stock, setStock] = useState<number>(0)
   const [stockMax, setStockMax] = useState<number>(0)
   const [stockComponents, setStockComponents] = useState<StockComponent>()
   const [inicio, setInicio] = useState<string>(format(new Date(), 'yyyy-MM-dd'))
   const [fin, setFin] = useState<string>(format(Date.now() - 7*60*60*24*1000,'yyyy-MM-dd'))
-  const [dataAmountVen, setDataAmountVen] = useState<number[]>();
-  const [dataTime, setDataTime] = useState<Date[]>();
-  const [dataAmountPro, setDataAmountPro] = useState<number[]>();
-  const [filterText, setFilterText] = useState('');
+  const [dataAmountVen, setDataAmountVen] = useState<number[]>()
+  const [dataTime, setDataTime] = useState<Date[]>()
+  const [dataAmountPro, setDataAmountPro] = useState<number[]>()
+  const [filterText, setFilterText] = useState('')
+  const [is3kgEnabled, setIs3kgEnabled] = useState<boolean>(true)
+  const [is6kgEnabled, setIs6kgEnabled] = useState<boolean>(true)
 
  const columns = [
    {
@@ -81,10 +78,26 @@ export default function Dashboard() {
  ]
 
   async function fetchData() {
-    const response = await fetch(`/api/data?inicio=${inicio}&fin=${fin}`, {
-      method: "GET",
-      headers: {"Content-Type": "application/json"},
-    });
+    let response:Response;
+    if( is6kgEnabled && is3kgEnabled ){
+      response = await fetch(`/api/data?inicio=${inicio}&fin=${fin}&6kg=1&3kg=1`, {
+        method: "GET",
+        headers: {"Content-Type": "application/json"},
+      });
+    }else{
+      if(is6kgEnabled && !is3kgEnabled ){
+        response = await fetch(`/api/data?inicio=${inicio}&fin=${fin}&6kg=1`, {
+          method: "GET",
+          headers: {"Content-Type": "application/json"},
+        });
+      }
+      else {
+        response = await fetch(`/api/data?inicio=${inicio}&fin=${fin}&3kg=1`, {
+          method: "GET",
+          headers: {"Content-Type": "application/json"},
+        });
+      }
+    }
     if (response.ok) {
       const res = await response.json();
       setDataAmountPro(res.data.map((p: Data) => p.produccion));
@@ -163,7 +176,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchData();
-  }, [inicio,fin]);
+  }, [inicio,fin,is3kgEnabled,is6kgEnabled]);
+
   return (
     <div className=" font-sans items-center justify-items-center min-h-full pb-20 gap-16 sm:p-2 ">
       <main className="mt-15 sm:mt-10 grid xl:grid-cols-2 grid-rows-1 grid-cols-1 items-center gap-10 rounded-2xl">
@@ -178,12 +192,18 @@ export default function Dashboard() {
         }
 
         {dataTime && dataAmountPro && dataAmountVen ? (
-            <div className="flex flex-col w-full 2xl:w-[540px] h-full bg-gray-300 rounded-2xl p-1 outline-2 outline-blue-900">
-              <div className="flex gap-4 text-black mt-2 text-[20px] font-semibold items-center flex-col">
+            <div className="relative flex flex-col w-full 2xl:w-[540px] h-full bg-gray-300 rounded-2xl p-1 outline-2 outline-blue-900">
+              <div className="flex gap-4 text-black mr-15 sm:mr-0 mt-2 text-[20px] font-semibold items-center flex-col">
                 <a>
                  Producción vs Ventas
                 </a>
               </div>
+              <Button onClick={()=>{ is6kgEnabled && is3kgEnabled ? setIs6kgEnabled(false) : setIs6kgEnabled(true) }} className={`w-[50px] justify-center  absolute right-2 top-2 ${is6kgEnabled ? 'outline-2' : 'bg-gray-500'} `}>
+                  6Kg
+              </Button>
+              <Button onClick={()=>{ is3kgEnabled && is6kgEnabled ? setIs3kgEnabled(false) : setIs3kgEnabled(true) }} className={`w-[50px] justify-center absolute sm:right-17 sm:top-2 right-2 top-13 ${is3kgEnabled ? 'outline-2' : 'bg-gray-500'} `}>
+                3Kg
+              </Button>
               <BarChart
                   xAxis={[{
                     data: dataTime,
@@ -242,7 +262,6 @@ export default function Dashboard() {
                       item.tipodemovimiento.toLowerCase().includes(filterText.toLowerCase().trim()) ||
                       item.cantidad.toString().includes(filterText) || item.hora.toString().trim().includes(filterText.toLowerCase().trim())
                   )}
-                  //Might be a good idea to add a sort for the types (peso) of the bags
                   pagination
                   paginationComponentOptions={{
                     rowsPerPageText:"Entradas por página",

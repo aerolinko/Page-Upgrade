@@ -27,10 +27,10 @@ export async function getUser(username: string, password: string) {
 
 export async function getData(inicio: string, fin: string) {
     try{
-        const query = `SELECT fecha_correcta, SUM(CASE WHEN tipodemovimiento = 'Produccion' AND peso='6kg' THEN cantidad
-                       WHEN tipodemovimiento = 'Produccion' AND peso='3kg' THEN cantidad*0.5 ELSE 0 END) AS produccion,
-                       SUM(CASE WHEN tipodemovimiento = 'Venta' AND peso='6kg' THEN cantidad
-                       WHEN tipodemovimiento = 'Venta' and peso='3kg' THEN cantidad*0.5 ELSE 0 END) AS venta
+        const query = `SELECT fecha_correcta, SUM(CASE WHEN tipodemovimiento = 'Produccion' THEN cantidad
+                        ELSE 0 END) AS produccion,
+                       SUM(CASE WHEN tipodemovimiento = 'Venta' THEN cantidad
+                       ELSE 0 END) AS venta
                        FROM registrocompleto
                        WHERE tipodemovimiento IN ('Produccion', 'Venta') and fecha_correcta between ? and ?
                        GROUP BY fecha_correcta
@@ -42,6 +42,43 @@ export async function getData(inicio: string, fin: string) {
         console.error('Error executing query:', err);
     }
 }
+
+export async function getOnly3kg(inicio: string, fin: string) {
+    try{
+        const query = `SELECT fecha_correcta, SUM(CASE WHEN tipodemovimiento = 'Produccion' AND peso='3kg' THEN cantidad
+                                                       ELSE 0 END) AS produccion,
+                              SUM(CASE WHEN tipodemovimiento = 'Venta' AND peso='3kg' THEN cantidad
+                                       ELSE 0 END) AS venta
+                       FROM registrocompleto
+                       WHERE tipodemovimiento IN ('Produccion', 'Venta') and fecha_correcta between ? and ?
+                       GROUP BY fecha_correcta
+                       ORDER BY fecha_correcta desc`;
+        const [rows] = await pool.execute(query, [fin, inicio]);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+
+export async function getOnly6kg(inicio: string, fin: string) {
+    try{
+        const query = `SELECT fecha_correcta, SUM(CASE WHEN tipodemovimiento = 'Produccion' AND peso='6kg' THEN cantidad
+                       ELSE 0 END) AS produccion,
+                       SUM(CASE WHEN tipodemovimiento = 'Venta' AND peso='6kg' THEN cantidad
+                       ELSE 0 END) AS venta
+                       FROM registrocompleto
+                       WHERE tipodemovimiento IN ('Produccion', 'Venta') and fecha_correcta between ? and ?
+                       GROUP BY fecha_correcta
+                       ORDER BY fecha_correcta desc`;
+        const [rows] = await pool.execute(query, [fin, inicio]);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+
 
 export async function getAllData() {
     try{
