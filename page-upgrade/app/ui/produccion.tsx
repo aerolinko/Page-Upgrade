@@ -22,7 +22,6 @@ export default function Produccion({statePro, setStatePro}:{
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
-        console.log('1212')
         const response = await fetch(`/api/data?prod=1`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -33,7 +32,7 @@ export default function Produccion({statePro, setStatePro}:{
             setMensaje('Se ha guardado exitosamente');
             setTimeout(() => setMensaje(''), 2000);
             reset();
-            statePro ? setStatePro(false) : setStatePro(false);
+            statePro ? setStatePro(false) : setStatePro(true);
         } else {
             forceExpiredLogOut(response);
             setError("Error obteniendo los datos del servidor");
@@ -78,10 +77,15 @@ export default function Produccion({statePro, setStatePro}:{
                         min="1"
                         max="1000"
                         value={cantidad}
-                        onClick={()=>{setCantidad("")}}
+                        onClick={()=>{
+                            if(isZero) {
+                                setCantidad("")
+                            }
+                        }}
                         onBlur={()=>{
-                            if(isZero){
+                            if(isZero || cantidad === ""){
                                 setCantidad("0")
+                                setIsZero(true);
                             }
                         }}
                         onChange={(e) => {
@@ -108,7 +112,7 @@ export default function Produccion({statePro, setStatePro}:{
                     <ScaleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-white" />
                 </div>
                 {error && (
-                    <div className="flex gap-4 mt-2 items-center flex-col sm:flex-row text-red-500">
+                    <div className="flex gap-4 text-[15px] text-justify mt-2 items-center flex-col sm:flex-row text-red-500">
                         <a>
                             {error}
                         </a>
@@ -116,7 +120,7 @@ export default function Produccion({statePro, setStatePro}:{
                 )
                 }
                 {mensaje && (
-                    <div className="flex gap-4 mt-2 items-center flex-col sm:flex-row text-green-500">
+                    <div className="flex  gap-4 mt-2 items-center flex-col sm:flex-row text-green-500">
                         <a>
                             {mensaje}
                         </a>

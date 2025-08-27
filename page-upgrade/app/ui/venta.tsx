@@ -12,7 +12,14 @@ export default function Venta({stateVen, setStateVen}:{
     stateVen: boolean;
     setStateVen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+
+    interface StockComponent {
+        peso_3kg: number;
+        peso_6kg: number;
+    }
+
     const [error, setError] = useState<string>();
+    const [stockComponents, setStockComponents] = useState<StockComponent>({peso_3kg: 0, peso_6kg: 0});
     const [mensaje, setMensaje] = useState<string>();
     const [cantidad, setCantidad] = useState<string>('0');
     const [peso, setPeso] = useState<string>('');
@@ -22,7 +29,8 @@ export default function Venta({stateVen, setStateVen}:{
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
-        console.log('1212')
+        if((parseInt(cantidad) <= stockComponents.peso_6kg && peso=='6kg') ||
+            (parseInt(cantidad) <= stockComponents.peso_3kg && peso=='3kg')) {
         const response = await fetch(`/api/data?venta=1`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -30,10 +38,31 @@ export default function Venta({stateVen, setStateVen}:{
         });
         if (response.ok) {
             const res = await response.json();
+            await fetchStockComponents();
             setMensaje('Se ha guardado exitosamente');
             setTimeout(() => setMensaje(''), 2000);
             reset();
-            stateVen ? setStateVen(false) : setStateVen(false);
+            stateVen ? setStateVen(false) : setStateVen(true);
+        } else {
+            forceExpiredLogOut(response);
+            setError("Error obteniendo los datos del servidor");
+            }
+        }
+        else {
+            setError(`Error, la venta excede la cantidad en stock para bolsas de ${peso}`);
+            setTimeout(()=> setError(""),5000);
+        }
+
+    }
+
+    async function fetchStockComponents() {
+        const response = await fetch(`/api/data?stockComponent=1`, {
+            method: "GET",
+            headers: {"Content-Type": "application/json"},
+        });
+        if (response.ok) {
+            const res = await response.json();
+            setStockComponents(res.data[0]);
         } else {
             forceExpiredLogOut(response);
             setError("Error obteniendo los datos del servidor");
@@ -63,6 +92,7 @@ export default function Venta({stateVen, setStateVen}:{
     }
 
     useEffect(() => {
+        fetchStockComponents();
     }, []);
 
     return (
@@ -78,10 +108,15 @@ export default function Venta({stateVen, setStateVen}:{
                             min="1"
                             max="1000"
                             value={cantidad}
-                            onClick={()=>{setCantidad("")}}
+                            onClick={()=>{
+                                if(isZero) {
+                                    setCantidad("")
+                                }
+                            }}
                             onBlur={()=>{
-                                if(isZero){
+                                if(isZero || cantidad === ""){
                                     setCantidad("0")
+                                    setIsZero(true);
                                 }
                             }}
                             onChange={(e) => {
@@ -90,14 +125,14 @@ export default function Venta({stateVen, setStateVen}:{
                             }}
                             required
                             className={`[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none peer block w-full rounded-md border
-                         ${isZero ? 'text-gray-400' : 'text-blue-300'} border-white py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+                         ${isZero ? 'text-gray-400' : 'text-red-300'} border-white py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
                         />
                         <ArrowUpCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-white" />
                     </div>
                     <label htmlFor='peso'> Peso </label>
                     <div className="relative">
                         <select value={peso} required className={`peer block w-full rounded-md border border-white py-[9px] pl-10 text-sm outline-2 
-                    ${isSelected ? 'text-blue-300': 'text-gray-400 italic'}`}
+                    ${isSelected ? 'text-red-300': 'text-gray-400 italic'}`}
                                 id='peso'
                                 onChange={(e) => {setPeso(e.target.value); setIsSelected(true)}}
                         >
@@ -107,8 +142,11 @@ export default function Venta({stateVen, setStateVen}:{
                         </select>
                         <ScaleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-white" />
                     </div>
+                    {peso && stockComponents &&(
+                        <div className='text-sm text-red-300'> Stock disponible de {peso}: {peso=='6kg' ? new Intl.NumberFormat('es-VE').format(stockComponents.peso_6kg)  : new Intl.NumberFormat('es').format(stockComponents.peso_3kg)} </div>
+                    )}
                     {error && (
-                        <div className="flex gap-4 mt-2 items-center flex-col sm:flex-row text-red-500">
+                        <div className="flex text-justify text-[15px] gap-4 mt-2 items-center flex-col sm:flex-row text-red-500">
                             <a>
                                 {error}
                             </a>
@@ -123,7 +161,7 @@ export default function Venta({stateVen, setStateVen}:{
                         </div>
                     )
                     }
-                    <Button className="mt-4 w-full">
+                    <Button className={`w-full ${peso ? 'mt-0' : 'mt-4'}`}>
                         Crear <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
                     </Button>
                 </form>

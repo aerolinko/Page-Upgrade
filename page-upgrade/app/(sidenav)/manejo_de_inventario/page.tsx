@@ -115,7 +115,7 @@ export default function Dashboard() {
       <div className="flex flex-col items-center justify-center min-h-full">
 
         {isProduccion && (
-        <main className="flex md:flex-row flex-col w-full items-center justify-center min-h-full">
+        <main className="flex mt-5 xl:flex-row flex-col w-full items-center justify-center min-h-full">
         <div className=" m-10 bg-gray-700 p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-[350px]  sm:max-w-sm min-w-xs transform transition-all duration-300 ">
           <Produccion setStatePro={setStatePro} statePro={statePro} />
           <Button onClick={()=>{
@@ -126,8 +126,8 @@ export default function Dashboard() {
           </Button>
         </div>
           {dataPro && dataPro.length > 0 ? (
-              <div className="flex flex-col xl:ml-10 mt-5 xl:w-[540px] sm:w-[430px] w-[350px] min-h-fit bg-gray-300 rounded-2xl p-1.5 outline-2 outline-blue-900">
-                <div className="flex gap-4 text-black  mb-1 mt-1 xl:text-[20px] text-[17px] font-semibold items-center flex-col">
+              <div className="flex flex-col xl:ml-10 mb-10 mt-5 xl:w-[460px] sm:w-[430px] w-[350px] min-h-fit bg-gray-700 rounded-2xl p-1.5 outline-2 outline-white">
+                <div className="flex gap-4 text-white  mb-1 mt-1 xl:text-[20px] text-[17px] font-semibold items-center flex-col">
                   <a>
                     Registro completo de Producción
                   </a>
@@ -210,7 +210,7 @@ export default function Dashboard() {
 
 
         {isVenta && (
-            <main className="flex md:flex-row flex-col w-full items-center justify-center min-h-full">
+            <main className="flex mt-5 sm:mt-0 xl:flex-row flex-col w-full items-center justify-center min-h-full">
             <div className=" m-10 bg-gray-700 p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-[350px]  sm:max-w-sm min-w-xs transform transition-all duration-300 ">
               <Venta stateVen={stateVen} setStateVen={setStateVen} />
               <Button onClick={()=>{
@@ -221,8 +221,8 @@ export default function Dashboard() {
               </Button>
             </div>
               {dataVen && dataVen.length > 0 ? (
-                  <div className="flex flex-col xl:ml-10 mt-5 xl:w-[540px] sm:w-[430px] w-[350px] min-h-fit bg-gray-300 rounded-2xl p-1.5 outline-2 outline-blue-900">
-                    <div className="flex gap-4 text-black  mb-1 mt-1 xl:text-[20px] text-[17px] font-semibold items-center flex-col">
+                  <div className="flex flex-col xl:ml-10 mb-10 mt-5 xl:w-[460px] sm:w-[430px] w-[350px] min-h-fit bg-gray-700 rounded-2xl p-1.5 outline-2 outline-white">
+                    <div className="flex gap-4 text-white  mb-1 mt-1 xl:text-[20px] text-[17px] font-semibold items-center flex-col">
                       <a>
                         Registro completo de Ventas
                       </a>

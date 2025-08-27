@@ -12,7 +12,6 @@ import {es} from "date-fns/locale/es";
 import DataTable from "react-data-table-component";
 import {redirect} from "next/navigation";
 import {Button} from "@/app/ui/button";
-import {ScaleIcon} from "@heroicons/react/24/outline";
 
 export default function Dashboard() {
   interface Data {
