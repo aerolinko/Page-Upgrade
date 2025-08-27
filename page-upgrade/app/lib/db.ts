@@ -89,6 +89,20 @@ export async function getAllData() {
     }
 }
 
+
+export async function getTypeData(tipo: string) {
+    try{
+        const query = `SELECT registro_id, fecha_correcta, tipodemovimiento, cantidad, peso,hora
+                       FROM registrocompleto WHERE tipodemovimiento=?
+                       ORDER BY registro_id desc`;
+        const [rows] = await pool.execute(query,[tipo]);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+
 export async function getStock() {
     try{
         const query = `SELECT SUM(Case when tipodemovimiento='Produccion' then cantidad else 0 end) - 
@@ -114,7 +128,7 @@ export async function getStockComponents() {
     }
 }
 
-export async function guardarProduccion(tipodemovimiento:string, cantidad:number, peso:number) {
+export async function guardarMovimiento(tipodemovimiento:string, cantidad:number, peso:number) {
     try{
         const date = new Date();
         const formattedTime = new Intl.DateTimeFormat('en-US', {
@@ -133,3 +147,4 @@ export async function guardarProduccion(tipodemovimiento:string, cantidad:number
         console.error('Error executing query:', err);
     }
 }
+

@@ -198,10 +198,18 @@ export default function Dashboard() {
                  Producción vs Ventas
                 </a>
               </div>
-              <Button onClick={()=>{ is6kgEnabled && is3kgEnabled ? setIs6kgEnabled(false) : setIs6kgEnabled(true) }} className={`w-[50px] justify-center  absolute right-2 top-2 ${is6kgEnabled ? 'outline-2' : 'bg-gray-500'} `}>
+              <Button onClick={()=>{
+                is6kgEnabled && is3kgEnabled ?
+                    setIs6kgEnabled(false) : setIs6kgEnabled(true)
+              }}
+              className={`w-[50px] justify-center  absolute right-2 top-2 ${is6kgEnabled ? 'outline-2' : 'bg-gray-500'} `}>
                   6Kg
               </Button>
-              <Button onClick={()=>{ is3kgEnabled && is6kgEnabled ? setIs3kgEnabled(false) : setIs3kgEnabled(true) }} className={`w-[50px] justify-center absolute sm:right-17 sm:top-2 right-2 top-13 ${is3kgEnabled ? 'outline-2' : 'bg-gray-500'} `}>
+              <Button onClick={()=>{
+                is3kgEnabled && is6kgEnabled ?
+                    setIs3kgEnabled(false) : setIs3kgEnabled(true)
+              }}
+              className={`w-[50px] z-1  justify-center absolute sm:right-17 sm:top-2 right-2 top-13 ${is3kgEnabled ? 'outline-2' : 'bg-gray-500'} `}>
                 3Kg
               </Button>
               <BarChart

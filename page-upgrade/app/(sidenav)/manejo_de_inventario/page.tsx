@@ -7,37 +7,299 @@ import {
 import {Button} from "@/app/ui/button";
 import Produccion from "@/app/ui/produccion";
 import Venta from "@/app/ui/venta";
+import DataTable from "react-data-table-component";
+import {format} from "date-fns";
 
 export default function Dashboard() {
+
+  interface Movimiento {
+    fecha_correcta: Date;
+    cantidad: number;
+    tipodemovimiento:string;
+    peso:string;
+    hora:string;
+  }
+
   const [isProduccion, setIsProduccion] = useState(false);
   const [isVenta, setIsVenta] = useState(false);
+  const [filterTextVen, setFilterTextVen] = useState('')
+  const [filterTextPro, setFilterTextPro] = useState('')
+  const [dataVen, setDataVen] = useState<Movimiento[]>()
+  const [dataPro, setDataPro] = useState<Movimiento[]>()
+  const [errorPro, setErrorPro] = useState<string>()
+  const [errorVen, setErrorVen] = useState<string>()
+  const [statePro, setStatePro] = useState<boolean>(true)
+  const [stateVen, setStateVen] = useState<boolean>(true)
+
+  const columns = [
+    {
+      name: 'Fecha',
+      selector: (row: Movimiento) => format(new Date(row.fecha_correcta), 'dd/MM/yyyy'),
+      sortable: true,
+      sortFunction: (rowA: Movimiento, rowB: Movimiento) => {
+        const dateA = new Date(rowA.fecha_correcta).getTime();
+        const dateB = new Date(rowB.fecha_correcta).getTime();
+        return dateA - dateB;
+      },
+    },
+    {
+      name: 'Movimiento',
+      selector: (row: Movimiento) => row.tipodemovimiento,
+      sortable: true,
+    },
+    {
+      name: 'Cantidad',
+      selector: (row: Movimiento) => row.cantidad,
+      sortable: true,
+    },
+    {
+      name: 'Peso',
+      selector: (row: Movimiento) => row.peso,
+    },
+    {
+      name: 'Hora',
+      selector: (row: Movimiento) => row.hora,
+    },
+  ]
+
+  async function fetchVenData() {
+    const response = await fetch(`/api/data?venta=1`, {
+      method: "GET",
+      headers: {"Content-Type": "application/json"},
+    });
+    if (response.ok) {
+      const res = await response.json();
+      setDataVen(res.data);
+    } else {
+      forceExpiredLogOut(response);
+      setErrorVen("Error obteniendo los datos del servidor");
+    }
+  }
+
+  async function fetchProData() {
+    const response = await fetch(`/api/data?prod=1`, {
+      method: "GET",
+      headers: {"Content-Type": "application/json"},
+    });
+    if (response.ok) {
+      const res = await response.json();
+      setDataPro(res.data);
+    } else {
+      forceExpiredLogOut(response);
+      setErrorPro("Error obteniendo los datos del servidor");
+    }
+
+  }
+
+  function forceExpiredLogOut(res: Response) {
+    if (res.status === 401) {
+      redirect('/');
+    }
+  }
+
+  useEffect(() => {
+    fetchVenData();
+    fetchProData();
+  }, []);
+
+  useEffect(() => {
+    fetchProData();
+  }, [statePro]);
+
+  useEffect(() => {
+    fetchVenData();
+  }, [stateVen]);
 
   return (
 
       <div className="flex flex-col items-center justify-center min-h-full">
 
         {isProduccion && (
-        <main className=" m-10 bg-gray-700 p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-[350px]  sm:max-w-sm min-w-xs transform transition-all duration-300 ">
-          <Produccion/>
+        <main className="flex md:flex-row flex-col w-full items-center justify-center min-h-full">
+        <div className=" m-10 bg-gray-700 p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-[350px]  sm:max-w-sm min-w-xs transform transition-all duration-300 ">
+          <Produccion setStatePro={setStatePro} statePro={statePro} />
           <Button onClick={()=>{
             setIsProduccion(false)
           }} className="mt-4 w-fit bg-gray-800 hover:bg-gray-500">
             <ArrowLeftIcon className="mr-2 h-5 w-5 text-gray-50" />
             Regresar
           </Button>
-      </main>
+        </div>
+          {dataPro && dataPro.length > 0 ? (
+              <div className="flex flex-col xl:ml-10 mt-5 xl:w-[540px] sm:w-[430px] w-[350px] min-h-fit bg-gray-300 rounded-2xl p-1.5 outline-2 outline-blue-900">
+                <div className="flex gap-4 text-black  mb-1 mt-1 xl:text-[20px] text-[17px] font-semibold items-center flex-col">
+                  <a>
+                    Registro completo de Producción
+                  </a>
+                </div>
+                <input
+                    type="text"
+                    placeholder="Buscar..."
+                    value={filterTextPro}
+                    onChange={(e) => setFilterTextPro(e.target.value)}
+                    className="mb-1 p-2 pl-4 border border-gray-300 bg-gray-400 text-black rounded-xl font-bold"
+                />
+                <DataTable
+                    columns={columns}
+                    data={dataPro.filter(item =>
+                        format(item.fecha_correcta, 'dd/MM/yyyy').includes(filterTextPro.toLowerCase().trim()) ||
+                        item.tipodemovimiento.toLowerCase().includes(filterTextPro.toLowerCase().trim()) ||
+                        item.cantidad.toString().includes(filterTextPro) || item.hora.toString().trim().includes(filterTextPro.toLowerCase().trim())
+                    )}
+                    pagination
+                    paginationComponentOptions={{
+                      rowsPerPageText:"Entradas por página",
+                      rangeSeparatorText: 'de',
+                    }
+                    }
+                    paginationPerPage={5}
+                    paginationRowsPerPageOptions={[5, 10, 15]}
+                    highlightOnHover
+                    responsive
+                    noDataComponent="No hay datos disponibles"
+                    progressPending={!dataPro.length}
+                    customStyles={{
+                      tableWrapper: {
+                        style:{
+                          overflowX: 'auto',
+                        }
+                      },
+                      headRow: {
+                        style: {
+                          backgroundColor: '#99A1AF',
+                          fontWeight: 'bold',
+                          fontFamily: 'Geist',
+                        },
+                      },
+                      rows: {
+                        style: {
+                          backgroundColor: '#99A1AF',
+                          fontWeight: 'bold',
+                          minWidth: '589px',
+                        },
+                        highlightOnHoverStyle:{
+                          backgroundColor: '#D1D5DC',
+                        }
+                      },
+                      pagination: {
+                        style: {
+                          borderRadius: '15px',
+                          color: '#2C2D2E',
+                          backgroundColor: '#99A1AF',
+                          fontWeight: 'bold',
+                          marginTop: '2px',
+                        },
+                      },
+                      noData: {
+                        style: {
+                          backgroundColor: '#99A1AF',
+                          fontWeight: 'bold',
+                          padding: '10px',
+                        }
+                      }
+                    }
+                    }
+                />
+              </div>
+          ) : !errorPro && (
+              <p>Cargando tabla...</p>
+          )}
+
+        </main>
         )}
 
 
         {isVenta && (
-            <main className=" m-10 bg-gray-700 p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-[350px]  sm:max-w-sm min-w-xs transform transition-all duration-300 ">
-              <Venta/>
+            <main className="flex md:flex-row flex-col w-full items-center justify-center min-h-full">
+            <div className=" m-10 bg-gray-700 p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-[350px]  sm:max-w-sm min-w-xs transform transition-all duration-300 ">
+              <Venta stateVen={stateVen} setStateVen={setStateVen} />
               <Button onClick={()=>{
                 setIsVenta(false)
               }} className="mt-4 w-fit bg-gray-800 hover:bg-gray-500">
                 <ArrowLeftIcon className="mr-2 h-5 w-5 text-gray-50" />
                 Regresar
               </Button>
+            </div>
+              {dataVen && dataVen.length > 0 ? (
+                  <div className="flex flex-col xl:ml-10 mt-5 xl:w-[540px] sm:w-[430px] w-[350px] min-h-fit bg-gray-300 rounded-2xl p-1.5 outline-2 outline-blue-900">
+                    <div className="flex gap-4 text-black  mb-1 mt-1 xl:text-[20px] text-[17px] font-semibold items-center flex-col">
+                      <a>
+                        Registro completo de Ventas
+                      </a>
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Buscar..."
+                        value={filterTextVen}
+                        onChange={(e) => setFilterTextVen(e.target.value)}
+                        className="mb-1 p-2 pl-4 border border-gray-300 bg-gray-400 text-black rounded-xl font-bold"
+                    />
+
+                    <DataTable
+                        columns={columns}
+                        data={dataVen.filter(item =>
+                            format(item.fecha_correcta, 'dd/MM/yyyy').includes(filterTextVen.toLowerCase().trim()) ||
+                            item.tipodemovimiento.toLowerCase().includes(filterTextVen.toLowerCase().trim()) ||
+                            item.cantidad.toString().includes(filterTextVen) || item.hora.toString().trim().includes(filterTextVen.toLowerCase().trim())
+                        )}
+                        pagination
+                        paginationComponentOptions={{
+                          rowsPerPageText:"Entradas por página",
+                          rangeSeparatorText: 'de',
+                        }
+                        }
+                        paginationPerPage={5}
+                        paginationRowsPerPageOptions={[5, 10, 15]}
+                        highlightOnHover
+                        responsive
+                        noDataComponent="No hay datos disponibles"
+                        progressPending={!dataVen.length}
+                        customStyles={{
+                          tableWrapper: {
+                            style:{
+                              overflowX: 'auto',
+                            }
+                          },
+                          headRow: {
+                            style: {
+                              backgroundColor: '#99A1AF',
+                              fontWeight: 'bold',
+                              fontFamily: 'Geist',
+                            },
+                          },
+                          rows: {
+                            style: {
+                              backgroundColor: '#99A1AF',
+                              fontWeight: 'bold',
+                              minWidth: '589px',
+                            },
+                            highlightOnHoverStyle:{
+                              backgroundColor: '#D1D5DC',
+                            }
+                          },
+                          pagination: {
+                            style: {
+                              borderRadius: '15px',
+                              color: '#2C2D2E',
+                              backgroundColor: '#99A1AF',
+                              fontWeight: 'bold',
+                              marginTop: '2px',
+                            },
+                          },
+                          noData: {
+                            style: {
+                              backgroundColor: '#99A1AF',
+                              fontWeight: 'bold',
+                              padding: '10px',
+                            }
+                          }
+                        }
+                        }
+                    />
+                  </div>
+              ) : !errorVen && (
+                  <p>Cargando tabla...</p>
+              )}
             </main>
         )}
 

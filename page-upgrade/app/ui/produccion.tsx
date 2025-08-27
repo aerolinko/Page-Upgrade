@@ -8,7 +8,10 @@ import {
 import {Button} from "@/app/ui/button";
 import {ArrowRightIcon} from "@heroicons/react/20/solid";
 
-export default function Produccion() {
+export default function Produccion({statePro, setStatePro}:{
+    statePro: boolean;
+    setStatePro: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
     const [error, setError] = useState<string>();
     const [mensaje, setMensaje] = useState<string>();
     const [cantidad, setCantidad] = useState<string>('0');
@@ -20,7 +23,7 @@ export default function Produccion() {
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         console.log('1212')
-        const response = await fetch(`/api/data`, {
+        const response = await fetch(`/api/data?prod=1`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({cantidad, peso})
@@ -30,6 +33,7 @@ export default function Produccion() {
             setMensaje('Se ha guardado exitosamente');
             setTimeout(() => setMensaje(''), 2000);
             reset();
+            statePro ? setStatePro(false) : setStatePro(false);
         } else {
             forceExpiredLogOut(response);
             setError("Error obteniendo los datos del servidor");
@@ -65,7 +69,7 @@ export default function Produccion() {
     <div>
         <div className="w-full">
             <form onSubmit={handleSubmit} id='produccion' className="flex flex-col gap-3">
-                <label htmlFor='produccion' className='text-2xl font-semibold p-1'>Agregar Producción</label>
+                <label htmlFor='produccion' className='text-2xl font-semibold p-1 text-center'>Agregar Producción</label>
                 <label htmlFor='candidad'> Cantidad a guardar </label>
                 <div className="relative">
                     <input
