@@ -14,7 +14,7 @@ import {redirect, usePathname} from 'next/navigation';
 const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
     { name: 'Manejo de Inventario', href: '/manejo_de_inventario', icon: BuildingStorefrontIcon },
-    { name: 'Documents', href: '/documents', icon: DocumentTextIcon },
+    { name: 'Manejo de Registros', href: '/registros', icon: DocumentTextIcon },
     { name: 'Settings', href: '/settings', icon: CogIcon },
 ];
 

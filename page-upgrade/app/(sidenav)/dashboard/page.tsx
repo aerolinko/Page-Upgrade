@@ -6,12 +6,13 @@ import {
   pieArcLabelClasses,
   PieChart
 } from "@mui/x-charts";
-import {useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import {format} from "date-fns";
 import {es} from "date-fns/locale/es";
 import DataTable from "react-data-table-component";
 import {redirect} from "next/navigation";
 import {Button} from "@/app/ui/button";
+import {MagnifyingGlassIcon} from "@heroicons/react/24/outline";
 
 export default function Dashboard() {
   interface Data {
@@ -47,7 +48,7 @@ export default function Dashboard() {
 
  const columns = [
    {
-     name: 'Fecha',
+     name: 'FECHA',
      selector: (row: Movimiento) => format(new Date(row.fecha_correcta), 'dd/MM/yyyy'),
      sortable: true,
      sortFunction: (rowA: Movimiento, rowB: Movimiento) => {
@@ -57,21 +58,21 @@ export default function Dashboard() {
      },
    },
    {
-     name: 'Movimiento',
+     name: 'TIPO',
      selector: (row: Movimiento) => row.tipodemovimiento,
      sortable: true,
    },
    {
-     name: 'Cantidad',
+     name: 'CANTIDAD',
      selector: (row: Movimiento) => row.cantidad,
      sortable: true,
    },
    {
-     name: 'Peso',
+     name: 'PESO',
      selector: (row: Movimiento) => row.peso,
    },
    {
-     name: 'Hora',
+     name: 'HORA',
      selector: (row: Movimiento) => row.hora,
    },
  ]
@@ -179,7 +180,7 @@ export default function Dashboard() {
 
   return (
     <div className=" font-sans items-center justify-items-center min-h-full pb-20 gap-16 sm:p-2 ">
-      <main className="mt-15 sm:mt-10 grid xl:grid-cols-2 grid-rows-1 grid-cols-1 items-center gap-10 rounded-2xl">
+      <main className="mt-15 sm:mt-10 grid xl:grid-cols-2 grid-rows-1 grid-cols-1 items-center gap-10 rounded-xl">
 
         {error && (
             <div className="flex gap-4 items-center flex-col sm:flex-row text-red-500">
@@ -191,7 +192,7 @@ export default function Dashboard() {
         }
 
         {dataTime && dataAmountPro && dataAmountVen ? (
-            <div className="relative flex flex-col w-full 2xl:w-[540px] h-full bg-gray-300 rounded-2xl p-1 outline-2 outline-blue-900">
+            <div className="relative flex flex-col w-full 2xl:w-[540px] h-full bg-gray-300 rounded-xl p-1 outline-1 shadow-md">
               <div className="flex gap-4 text-black mr-15 sm:mr-0 mt-2 text-[20px] font-semibold items-center flex-col">
                 <a>
                  Producción vs Ventas
@@ -248,19 +249,22 @@ export default function Dashboard() {
 
 
           {data && data.length > 0 ? (
-              <div className="flex flex-col 2xl:w-[540px] min-h-fit bg-gray-300 rounded-2xl p-1.5 outline-2 outline-blue-900">
+              <div className="flex flex-col px-4 2xl:w-[540px] min-h-fit bg-gray-300 rounded-xl py-3 outline-1 shadow-md">
                 <div className="flex gap-4 text-black  mb-1 mt-1 text-[20px] font-semibold items-center flex-col">
                   <a>
-                    Registro completo de movimientos
+                     Historial de movimientos
                   </a>
                 </div>
+                <div className='relative px-1 mb-3'>
                 <input
                     type="text"
                     placeholder="Buscar..."
                     value={filterText}
                     onChange={(e) => setFilterText(e.target.value)}
-                    className="mb-1 p-2 pl-4 border border-gray-300 bg-gray-400 text-black rounded-xl font-bold"
+                    className="p-2 pl-12 border w-full shadow-md placeholder:text-gray-900 border-gray-300 bg-gray-400 text-black rounded-lg"
                 />
+                <MagnifyingGlassIcon className="absolute left-4 top-1/2  -translate-y-1/2 h-6 w-6 text-black" />
+                </div>
 
               <DataTable
                   columns={columns}
@@ -284,20 +288,25 @@ export default function Dashboard() {
                   customStyles={{
                     tableWrapper: {
                       style:{
-                        overflowX: 'auto',
+                        overflowX: 'scroll',
+                        border: 'none',
+                        boxShadow: 'inherit',
                       }
                     },
                     headRow: {
                       style: {
-                        backgroundColor: '#99A1AF',
-                        fontWeight: 'bold',
+                        backgroundColor: '#1E2939',
+                        fontWeight: 'medium',
+                        color: 'white',
                       },
                     },
                     rows: {
                       style: {
                         backgroundColor: '#99A1AF',
-                        fontWeight: 'bold',
-                        minWidth: '589px',
+                        whiteSpace: 'nowrap',
+                        fontWeight: 'medium',
+                        minWidth: '542px',
+                        border: 'solid 1px',
                       },
                       highlightOnHoverStyle:{
                         backgroundColor: '#D1D5DC',
@@ -306,10 +315,13 @@ export default function Dashboard() {
                     pagination: {
                       style: {
                         borderRadius: '15px',
-                        color: '#2C2D2E',
-                        backgroundColor: '#99A1AF',
-                        fontWeight: 'bold',
+                        color: 'white',
+                        backgroundColor: '#1E2939',
+                        border: 'solid 1px',
                         marginTop: '2px',
+                      },
+                      pageButtonsStyle: {
+                        fill:"white",
                       },
                     },
                     noData: {
@@ -328,7 +340,7 @@ export default function Dashboard() {
           )}
 
         {stock && stockMax ? (
-        <div className="2xl:w-[540px] bg-[#D1D5DC] h-[300px] flex flex-col justify-center items-center rounded-2xl p-1 outline-2 outline-blue-900">
+        <div className="2xl:w-[540px] bg-[#D1D5DC] h-[300px] flex flex-col justify-center items-center rounded-xl p-1 outline-1 shadow-md">
           <div className="flex gap-4 text-black mt-2 text-[20px] font-semibold items-center flex-col">
             <a>
               Inventario en stock
@@ -368,7 +380,7 @@ export default function Dashboard() {
 
 
         {stockComponents ? (
-        <div className="w-full 2xl:w-[540px] bg-[#D1D5DC] h-[300px] rounded-2xl p-1 outline-2 outline-blue-900">
+        <div className="w-full 2xl:w-[540px] bg-[#D1D5DC] h-[300px] rounded-xl p-1 outline-1 shadow-md">
           <div className="flex gap-4 text-black mt-2 mb-2 text-[20px] font-semibold items-center flex-col">
             <a>
               Composición del inventario
