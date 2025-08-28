@@ -13,6 +13,10 @@ import DataTable from "react-data-table-component";
 import {redirect} from "next/navigation";
 import {Button} from "@/app/ui/button";
 import {MagnifyingGlassIcon} from "@heroicons/react/24/outline";
+import {esES} from "@mui/x-date-pickers/locales";
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import {ToggleButton, ToggleButtonGroup, toggleButtonGroupClasses} from "@mui/material";
 
 export default function Dashboard() {
   interface Data {
@@ -37,14 +41,15 @@ export default function Dashboard() {
   const [stock, setStock] = useState<number>(0)
   const [stockMax, setStockMax] = useState<number>(0)
   const [stockComponents, setStockComponents] = useState<StockComponent>()
-  const [inicio, setInicio] = useState<string>(format(new Date(), 'yyyy-MM-dd'))
-  const [fin, setFin] = useState<string>(format(Date.now() - 7*60*60*24*1000,'yyyy-MM-dd'))
+  const [inicio, setInicio] = useState<Date>(new Date())
+  const [fin, setFin] = useState<Date>(new Date(Date.now() - 7*60*60*24*1000))
   const [dataAmountVen, setDataAmountVen] = useState<number[]>()
   const [dataTime, setDataTime] = useState<Date[]>()
   const [dataAmountPro, setDataAmountPro] = useState<number[]>()
   const [filterText, setFilterText] = useState('')
   const [is3kgEnabled, setIs3kgEnabled] = useState<boolean>(true)
   const [is6kgEnabled, setIs6kgEnabled] = useState<boolean>(true)
+  const [selection,setSelection] = useState<string>('ambos')
 
  const columns = [
    {
@@ -80,19 +85,19 @@ export default function Dashboard() {
   async function fetchData() {
     let response:Response;
     if( is6kgEnabled && is3kgEnabled ){
-      response = await fetch(`/api/data?inicio=${inicio}&fin=${fin}&6kg=1&3kg=1`, {
+      response = await fetch(`/api/data?inicio=${format(inicio,'yyyy-MM-dd')}&fin=${format(fin,'yyyy-MM-dd')}&6kg=1&3kg=1`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       });
     }else{
       if(is6kgEnabled && !is3kgEnabled ){
-        response = await fetch(`/api/data?inicio=${inicio}&fin=${fin}&6kg=1`, {
+        response = await fetch(`/api/data?inicio=${format(inicio,'yyyy-MM-dd')}&fin=${format(fin,'yyyy-MM-dd')}}&6kg=1`, {
           method: "GET",
           headers: {"Content-Type": "application/json"},
         });
       }
       else {
-        response = await fetch(`/api/data?inicio=${inicio}&fin=${fin}&3kg=1`, {
+        response = await fetch(`/api/data?inicio=${format(inicio,'yyyy-MM-dd')}&fin=${format(fin,'yyyy-MM-dd')}&3kg=1`, {
           method: "GET",
           headers: {"Content-Type": "application/json"},
         });
@@ -178,6 +183,12 @@ export default function Dashboard() {
     fetchData();
   }, [inicio,fin,is3kgEnabled,is6kgEnabled]);
 
+  useEffect(() => {
+    if(selection=='3kg'){setIs3kgEnabled(true); setIs6kgEnabled(false)}
+    else if(selection=='6kg'){setIs6kgEnabled(true); setIs3kgEnabled(false)}
+    else {setIs3kgEnabled(true); setIs6kgEnabled(true)}
+  }, [selection]);
+
   return (
     <div className=" font-sans items-center justify-items-center min-h-full pb-20 gap-16 sm:p-2 ">
       <main className="mt-15 sm:mt-10 grid xl:grid-cols-2 grid-rows-1 grid-cols-1 items-center gap-10 rounded-xl">
@@ -193,23 +204,49 @@ export default function Dashboard() {
 
         {dataTime && dataAmountPro && dataAmountVen ? (
             <div className="relative flex flex-col w-full 2xl:w-[540px] h-full bg-gray-300 rounded-xl p-1 outline-1 shadow-md">
-              <div className="flex gap-4 text-black mr-15 sm:mr-0 mt-2 text-[20px] font-semibold items-center flex-col">
+              <div className="flex gap-4 text-black mt-2 text-[20px] font-semibold items-center flex-col">
                 <a>
                  Producción vs Ventas
                 </a>
               </div>
+              {/*
+              <div className='z-1 right-2 top-2 absolute'>
+              <ToggleButtonGroup
+                  color="primary"
+                  sx={{justifyContent: "end",[`& .${toggleButtonGroupClasses.selected}`]:{
+                      borderColor: "deepskyblue",
+                      color:'black',
+                      fontSize:{xs: "10px", lg:"14px"},
+                      borderWidth:"2px",
+                    },[`& .${toggleButtonGroupClasses.grouped}`]:{
+                    color:'black',
+                      fontSize:{xs: "10px", lg:"14px"},
+                      borderWidth:"2px",
+                  }}}
+                  exclusive
+                  aria-label="Platform"
+                  orientation={'vertical'}
+                  value={selection}
+                  onChange={(e,newSelection:string) => {setSelection(newSelection)}}
+              >
+                <ToggleButton value="ambos">Ambos</ToggleButton>
+                <ToggleButton value="6kg">6kg</ToggleButton>
+                <ToggleButton value="3kg">3kg</ToggleButton>
+              </ToggleButtonGroup>
+              </div>
+              */}
               <Button onClick={()=>{
                 is6kgEnabled && is3kgEnabled ?
                     setIs6kgEnabled(false) : setIs6kgEnabled(true)
               }}
-              className={`w-[50px] justify-center  absolute right-2 top-2 ${is6kgEnabled ? 'outline-2' : 'bg-gray-500'} `}>
-                  6Kg
+                      className={`w-[50px] justify-center  absolute right-2 top-2 ${is6kgEnabled ? 'outline-2' : 'bg-gray-500'} `}>
+                6Kg
               </Button>
               <Button onClick={()=>{
                 is3kgEnabled && is6kgEnabled ?
                     setIs3kgEnabled(false) : setIs3kgEnabled(true)
               }}
-              className={`w-[50px] z-1  justify-center absolute sm:right-17 sm:top-2 right-2 top-13 ${is3kgEnabled ? 'outline-2' : 'bg-gray-500'} `}>
+                      className={`w-[50px] z-1  justify-center absolute sm:right-17 sm:top-2 right-2 top-13 ${is3kgEnabled ? 'outline-2' : 'bg-gray-500'} `}>
                 3Kg
               </Button>
               <BarChart
@@ -231,6 +268,7 @@ export default function Dashboard() {
                     }]}
                   className=" min-w-full min-h-[300px] max-h-[300px]"/>
 
+              {/*
               <div className="flex flex-col sm:flex-row items-start justify-center gap-2 mr-2">
                 <div className="flex p-2 ml-1 text-black w-full  justify-between bg-[#99A1AF] border-gray-900 rounded-lg sm:w-[230px]">
                   <label className="ml-1 font-medium" htmlFor="fin">Desde</label>
@@ -239,7 +277,16 @@ export default function Dashboard() {
                 </div>
                 <div className="flex p-2 ml-1 text-black mb-2 w-full bg-[#99A1AF] justify-between border-gray-900 rounded-lg sm:w-[230px]">
                   <label className="ml-1 font-medium" htmlFor="inicio">Hasta</label>
-                  <input className="ml-1 sm:w-[130px] md:w-full" id='inicio' name='inicio' value={inicio} type='date' onChange={(e) => setInicio(e.target.value)}/></div>
+                  <input className="ml-1 sm:w-[130px] md:w-full" id='inicio' name='inicio' value={inicio} type='date' onChange={(e) => setInicio(e.target.value)}/>
+                </div>
+              </div>
+              */}
+
+              <div className="flex px-3 flex-row items-start justify-center gap-2 mb-5">
+                <LocalizationProvider adapterLocale={es} localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDateFns}>
+                  <DatePicker label={'Desde'}  slotProps={{actionBar: {actions: ['today']}}} value={fin} onChange={(newValue) => newValue && setFin(newValue)}/>
+                  <DatePicker label={'Hasta'}  slotProps={{actionBar: {actions: ['today']}}} value={inicio} format={'dd/MM/yyyy'}  onChange={(newValue) => newValue && setInicio(newValue)}/>
+                </LocalizationProvider>
               </div>
             </div>
 

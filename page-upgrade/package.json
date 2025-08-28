@@ -11,8 +11,10 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@fontsource/roboto": "^5.2.6",
     "@mui/material": "^7.3.1",
     "@mui/x-charts": "^8.10.1",
+    "@mui/x-date-pickers": "^8.10.2",
     "@next/env": "^15.4.6",
     "crypto": "^1.0.1",
     "datatables.net-dt": "^2.3.2",

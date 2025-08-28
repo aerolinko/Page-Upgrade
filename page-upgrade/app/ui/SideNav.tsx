@@ -6,7 +6,7 @@ import {
     HomeIcon,
     CogIcon,
     DocumentTextIcon,
-    ArrowRightEndOnRectangleIcon, BuildingStorefrontIcon
+    ArrowRightEndOnRectangleIcon, BuildingStorefrontIcon, TruckIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import {redirect, usePathname} from 'next/navigation';
@@ -15,7 +15,8 @@ const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
     { name: 'Manejo de Inventario', href: '/manejo_de_inventario', icon: BuildingStorefrontIcon },
     { name: 'Manejo de Registros', href: '/registros', icon: DocumentTextIcon },
-    { name: 'Settings', href: '/settings', icon: CogIcon },
+    { name: 'Distribuidores', href: '/distribuidores', icon: TruckIcon },
+    { name: 'Settings', href: '/settings', icon: CogIcon }
 ];
 
 export default function SideNav() {
@@ -24,8 +25,6 @@ export default function SideNav() {
 
     async function logOut(event: { preventDefault: () => void; }) {
         event.preventDefault();
-
-
         const response = await fetch("/api/logout", {
             method: "GET",
             headers: {"Content-Type": "application/json"}
@@ -67,7 +66,7 @@ export default function SideNav() {
                         <h1 className="text-xl font-bold">Hielo Tía Ana</h1>
                     </div>
                     <nav className="flex-1">
-                        <ul className="space-y-2">
+                        <ul className="space-y-2 pb-5 border-b-1 border-gray-500">
                             {navItems.map((item) => (
                                 <li key={item.name}>
                                     <Link
