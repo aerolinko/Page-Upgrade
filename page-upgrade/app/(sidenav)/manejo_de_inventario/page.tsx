@@ -1,8 +1,8 @@
 'use client'
-import {useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import {redirect} from "next/navigation";
 import {
-  ArrowDownOnSquareIcon, ArrowLeftIcon, ArrowUpOnSquareIcon,
+  ArrowDownOnSquareIcon, ArrowLeftIcon, ArrowUpOnSquareIcon, MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import {Button} from "@/app/ui/button";
 import Produccion from "@/app/ui/produccion";
@@ -33,7 +33,7 @@ export default function Dashboard() {
 
   const columns = [
     {
-      name: 'Fecha',
+      name: 'FECHA',
       selector: (row: Movimiento) => format(new Date(row.fecha_correcta), 'dd/MM/yyyy'),
       sortable: true,
       sortFunction: (rowA: Movimiento, rowB: Movimiento) => {
@@ -43,21 +43,21 @@ export default function Dashboard() {
       },
     },
     {
-      name: 'Movimiento',
+      name: 'TIPO',
       selector: (row: Movimiento) => row.tipodemovimiento,
       sortable: true,
     },
     {
-      name: 'Cantidad',
+      name: 'CANTIDAD',
       selector: (row: Movimiento) => row.cantidad,
       sortable: true,
     },
     {
-      name: 'Peso',
+      name: 'PESO',
       selector: (row: Movimiento) => row.peso,
     },
     {
-      name: 'Hora',
+      name: 'HORA',
       selector: (row: Movimiento) => row.hora,
     },
   ]
@@ -127,18 +127,21 @@ export default function Dashboard() {
         </div>
           {dataPro && dataPro.length > 0 ? (
               <div className="flex flex-col xl:ml-10 mb-10 mt-5 xl:w-[460px] sm:w-[430px] w-[350px] min-h-fit bg-gray-700 rounded-2xl p-1.5 outline-2 outline-white">
-                <div className="flex gap-4 text-white  mb-1 mt-1 xl:text-[20px] text-[17px] font-semibold items-center flex-col">
+                <div className="flex gap-4 text-white  mb-1 mt-1 text-[20px] font-semibold items-center flex-col">
                   <a>
-                    Registro completo de Producción
+                    Historial de Producción
                   </a>
                 </div>
-                <input
-                    type="text"
-                    placeholder="Buscar..."
-                    value={filterTextPro}
-                    onChange={(e) => setFilterTextPro(e.target.value)}
-                    className="mb-1 p-2 pl-4 border border-gray-300 bg-gray-400 text-black rounded-xl font-bold"
-                />
+                <div className='relative px-1 mb-3'>
+                  <input
+                      type="text"
+                      placeholder="Buscar..."
+                      value={filterTextPro}
+                      onChange={(e) => setFilterTextPro(e.target.value)}
+                      className="p-2 pl-12 border w-full shadow-md placeholder:text-gray-900 border-gray-300 bg-gray-400 text-black rounded-lg"
+                  />
+                  <MagnifyingGlassIcon className="absolute left-4 top-1/2  -translate-y-1/2 h-6 w-6 text-black" />
+                </div>
                 <DataTable
                     columns={columns}
                     data={dataPro.filter(item =>
@@ -161,21 +164,25 @@ export default function Dashboard() {
                     customStyles={{
                       tableWrapper: {
                         style:{
-                          overflowX: 'auto',
+                          overflowX: 'scroll',
+                          border: 'none',
+                          boxShadow: 'inherit',
                         }
                       },
                       headRow: {
                         style: {
-                          backgroundColor: '#99A1AF',
-                          fontWeight: 'bold',
-                          fontFamily: 'Geist',
+                          backgroundColor: '#1E2939',
+                          fontWeight: 'medium',
+                          color: 'white',
                         },
                       },
                       rows: {
                         style: {
                           backgroundColor: '#99A1AF',
-                          fontWeight: 'bold',
-                          minWidth: '589px',
+                          whiteSpace: 'nowrap',
+                          fontWeight: 'medium',
+                          minWidth: '557px',
+                          border: 'solid 1px',
                         },
                         highlightOnHoverStyle:{
                           backgroundColor: '#D1D5DC',
@@ -184,10 +191,13 @@ export default function Dashboard() {
                       pagination: {
                         style: {
                           borderRadius: '15px',
-                          color: '#2C2D2E',
-                          backgroundColor: '#99A1AF',
-                          fontWeight: 'bold',
-                          marginTop: '2px',
+                          color: 'white',
+                          backgroundColor: '#1E2939',
+                          border: 'solid 1px',
+                          marginTop: '5px',
+                        },
+                        pageButtonsStyle: {
+                          fill:"white",
                         },
                       },
                       noData: {
@@ -222,19 +232,21 @@ export default function Dashboard() {
             </div>
               {dataVen && dataVen.length > 0 ? (
                   <div className="flex flex-col xl:ml-10 mb-10 mt-5 xl:w-[460px] sm:w-[430px] w-[350px] min-h-fit bg-gray-700 rounded-2xl p-1.5 outline-2 outline-white">
-                    <div className="flex gap-4 text-white  mb-1 mt-1 xl:text-[20px] text-[17px] font-semibold items-center flex-col">
+                    <div className="flex gap-4 text-white  mb-1 mt-1 text-[20px] font-semibold items-center flex-col">
                       <a>
-                        Registro completo de Ventas
+                        Historial de Ventas
                       </a>
                     </div>
-                    <input
-                        type="text"
-                        placeholder="Buscar..."
-                        value={filterTextVen}
-                        onChange={(e) => setFilterTextVen(e.target.value)}
-                        className="mb-1 p-2 pl-4 border border-gray-300 bg-gray-400 text-black rounded-xl font-bold"
-                    />
-
+                    <div className='relative px-1 mb-3'>
+                      <input
+                          type="text"
+                          placeholder="Buscar..."
+                          value={filterTextVen}
+                          onChange={(e) => setFilterTextVen(e.target.value)}
+                          className="p-2 pl-12 border w-full shadow-md placeholder:text-gray-900 border-gray-300 bg-gray-400 text-black rounded-lg"
+                      />
+                      <MagnifyingGlassIcon className="absolute left-4 top-1/2  -translate-y-1/2 h-6 w-6 text-black" />
+                    </div>
                     <DataTable
                         columns={columns}
                         data={dataVen.filter(item =>
@@ -257,21 +269,25 @@ export default function Dashboard() {
                         customStyles={{
                           tableWrapper: {
                             style:{
-                              overflowX: 'auto',
+                              overflowX: 'scroll',
+                              border: 'none',
+                              boxShadow: 'inherit',
                             }
                           },
                           headRow: {
                             style: {
-                              backgroundColor: '#99A1AF',
-                              fontWeight: 'bold',
-                              fontFamily: 'Geist',
+                              backgroundColor: '#1E2939',
+                              fontWeight: 'medium',
+                              color: 'white',
                             },
                           },
                           rows: {
                             style: {
                               backgroundColor: '#99A1AF',
-                              fontWeight: 'bold',
-                              minWidth: '589px',
+                              whiteSpace: 'nowrap',
+                              fontWeight: 'medium',
+                              minWidth: '557px',
+                              border: 'solid 1px',
                             },
                             highlightOnHoverStyle:{
                               backgroundColor: '#D1D5DC',
@@ -280,10 +296,13 @@ export default function Dashboard() {
                           pagination: {
                             style: {
                               borderRadius: '15px',
-                              color: '#2C2D2E',
-                              backgroundColor: '#99A1AF',
-                              fontWeight: 'bold',
-                              marginTop: '2px',
+                              color: 'white',
+                              backgroundColor: '#1E2939',
+                              border: 'solid 1px',
+                              marginTop: '5px',
+                            },
+                            pageButtonsStyle: {
+                              fill:"white",
                             },
                           },
                           noData: {
