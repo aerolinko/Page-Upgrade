@@ -89,7 +89,6 @@ export async function getAllData() {
     }
 }
 
-
 export async function getTypeData(tipo: string) {
     try{
         const query = `SELECT registro_id, fecha_correcta, tipodemovimiento, cantidad, peso,hora
@@ -103,10 +102,23 @@ export async function getTypeData(tipo: string) {
     }
 }
 
+export async function getSpecialData() {
+    try{
+        const query = `SELECT registro_id, fecha_correcta, tipodemovimiento, cantidad, peso,hora
+                       FROM registrocompleto WHERE tipodemovimiento!='Produccion' AND tipodemovimiento!='Venta'
+                       ORDER BY registro_id desc`;
+        const [rows] = await pool.execute(query);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+
 export async function getStock() {
     try{
         const query = `SELECT SUM(Case when tipodemovimiento='Produccion' then cantidad else 0 end) - 
-                       SUM(Case when tipodemovimiento='Venta' then cantidad else 0 end) as inventario from registrocompleto`;
+                       SUM(Case when tipodemovimiento!='Produccion' then cantidad else 0 end) as inventario from registrocompleto`;
         const [rows] = await pool.execute(query);
         return rows;
     }
@@ -118,8 +130,8 @@ export async function getStock() {
 export async function getStockComponents() {
     try{
         const query = `SELECT SUM(Case when tipodemovimiento='Produccion' and peso='6kg' then cantidad else 0 end) - 
-                       SUM(Case when tipodemovimiento='Venta' and peso='6kg' then cantidad else 0 end) as peso_6kg, SUM(Case when tipodemovimiento='Produccion' and peso='3kg' then cantidad else 0 end) -
-                       SUM(Case when tipodemovimiento='Venta' and peso='3kg' then cantidad else 0 end) as peso_3kg from registrocompleto`;
+                       SUM(Case when tipodemovimiento!='Produccion' and peso='6kg' then cantidad else 0 end) as peso_6kg, SUM(Case when tipodemovimiento='Produccion' and peso='3kg' then cantidad else 0 end) -
+                       SUM(Case when tipodemovimiento!='Produccion' and peso='3kg' then cantidad else 0 end) as peso_3kg from registrocompleto`;
         const [rows] = await pool.execute(query);
         return rows;
     }

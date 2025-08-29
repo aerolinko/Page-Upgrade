@@ -4,7 +4,7 @@ import {
     getStock,
     getStockComponents,
     getOnly6kg,
-    getOnly3kg, guardarMovimiento, getTypeData, borrarMovimiento, editarMovimiento
+    getOnly3kg, guardarMovimiento, getTypeData, borrarMovimiento, editarMovimiento, getSpecialData
 } from "@/app/lib/db";
 import {NextRequest, NextResponse} from "next/server";
 
@@ -60,6 +60,14 @@ export async function GET(request: NextRequest) {
             }
         }
 
+        const special = request.nextUrl.searchParams.get('special');
+        if (special) {
+            const data = await getSpecialData();
+            if (data) {
+                return NextResponse.json({ status: 200, data });
+            }
+        }
+
         const stock = request.nextUrl.searchParams.get('stock');
         if (stock) {
             const data = await getStock();
@@ -92,6 +100,7 @@ export async function POST(request: NextRequest) {
     try{
         const venta = request.nextUrl.searchParams.get('venta');
         const prod = request.nextUrl.searchParams.get('prod');
+        const special = request.nextUrl.searchParams.get('special');
         const req = await request.json();
         const  peso = req.peso;
         const cantidad = req.cantidad;
@@ -102,6 +111,11 @@ export async function POST(request: NextRequest) {
         }
         if (req && venta) {
             await guardarMovimiento('Venta',cantidad,peso);
+            return NextResponse.json({ status: 200 });
+        }
+        if (req && special) {
+            const motivo = req.motivo;
+            await guardarMovimiento(motivo,cantidad,peso);
             return NextResponse.json({ status: 200 });
         }
 
