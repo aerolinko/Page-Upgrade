@@ -148,3 +148,26 @@ export async function guardarMovimiento(tipodemovimiento:string, cantidad:number
     }
 }
 
+export async function borrarMovimiento(id:number) {
+    try{
+        const query = `DELETE from registrocompleto where registro_id = (${id})`;
+        const [rows,fields] = await pool.execute(query);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+
+export async function editarMovimiento(id:number,cantidad:number,tipodemovimiento:string,peso:string) {
+    try{
+        const query = `UPDATE registrocompleto set cantidad=(${cantidad}), tipodemovimiento=('${tipodemovimiento}'), peso=('${peso}')
+                        where registro_id='${id}'`;
+        const [rows,fields] = await pool.execute(query);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+

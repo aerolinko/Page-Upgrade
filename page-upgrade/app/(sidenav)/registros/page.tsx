@@ -3,13 +3,14 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
     ArrowLeftCircleIcon,
-    ArrowRightCircleIcon,
+    ArrowRightCircleIcon, CheckIcon,
     MagnifyingGlassIcon,
     PencilIcon,
-    TrashIcon
+    TrashIcon, XMarkIcon
 } from "@heroicons/react/24/outline";
 import {redirect} from "next/navigation";
 import {format} from "date-fns";
+import {MenuItem, Select} from "@mui/material";
 
 export default function Roles() {
     const [filter, setFilter] = useState('');
@@ -17,6 +18,10 @@ export default function Roles() {
     const [itemsPerPage] = useState(6);
     const [error, setError] = useState<string | null>(null);
     const [mensaje, setMensaje] = useState<string | null>(null);
+    const [editingId, setEditingId] = useState<number>(0);
+    const [editingAmount, setEditingAmount] = useState<string>('');
+    const [editingType, setEditingType] = useState<string | null>(null);
+    const [editingWeight, setEditingWeight] = useState<string | null>(null);
 
     interface Movimiento {
         fecha_correcta: Date;
@@ -82,13 +87,62 @@ export default function Roles() {
     }, [totalPages]);
 
     async function handleEdit(row:Movimiento){
-        console.log(row);
+        setEditingId(row.registro_id);
+        setEditingAmount(row.cantidad.toString());
+        setEditingType(row.tipodemovimiento);
+        setEditingWeight(row.peso)
+    }
+
+    async function handleConfirmEdit(){
+        const response = await fetch(`/api/data`, {
+            method: "PATCH",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ editingId, editingAmount, editingType, editingWeight })
+        });
+        if (response.ok) {
+            const res = await response.json();
+            await fetchAllData();
+            await resetEdit();
+        } else {
+            forceExpiredLogOut(response);
+            setError("Error eliminando los datos del servidor");
+        }
+    }
+
+    async function resetEdit(){
+        setEditingId(0);
+        setEditingAmount('');
+        setEditingType(null);
+        setEditingWeight(null);
+    }
+
+    async function handleCancelEdit(){
+        await resetEdit();
     }
 
     async function handleDelete(row:Movimiento){
-        console.log(row);
+        const response = await fetch(`/api/data?id=${row.registro_id}`, {
+            method: "DELETE",
+            headers: {"Content-Type": "application/json"},
+        });
+        if (response.ok) {
+            const res = await response.json();
+            await fetchAllData();
+        } else {
+            forceExpiredLogOut(response);
+            setError("Error eliminando los datos del servidor");
+        }
     }
 
+    function limitNumericInput(e: React.ChangeEvent<HTMLInputElement>, max:number){
+        if(parseInt(e.target.value) > max){
+            return max.toString();
+        }
+        if(parseInt(e.target.value) < 1){
+            return (1).toString();
+        }
+        else return e.target.value;
+    }
 
     useEffect(() => {
         fetchAllData();
@@ -164,6 +218,13 @@ export default function Roles() {
                                 className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider  select-none"
 
                             >
+                                Peso
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider  select-none"
+
+                            >
                                 Hora
                             </th>
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
@@ -179,17 +240,73 @@ export default function Roles() {
                                         {format(role.fecha_correcta,'dd/MM/yyyy')}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
-                                        {role.tipodemovimiento}
+                                        {editingId === role.registro_id ? (
+
+                                            <Select
+                                            value={editingType}
+                                            onChange={(e)=>
+                                                setEditingType(e.target.value)
+                                            }
+                                            className='w-[120px]'
+                                            sx={{fontSize:'14px', borderRadius:'10px'}}
+                                            >
+                                                <MenuItem value={'Venta'}>Venta</MenuItem>
+                                                <MenuItem value={'Produccion'}>Produccion</MenuItem>
+                                            </Select>
+                                        ) : (role.tipodemovimiento)}
                                     </td>
                                     <td className="px-6 py-4 whitespace-normal text-sm text-black">
-                                        {role.cantidad}
+                                        {editingId === role.registro_id ? (
+                                            <input className='[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none border py-3 p-1.5 w-[100px] rounded-[10px]'
+                                                   type='number'
+                                                   min='1'
+                                                   max='1000'
+                                                   value={editingAmount}
+                                                   onChange={(e) => {
+                                                       setEditingAmount(limitNumericInput(e,1000));
+                                                   }}
+                                            />
+                                        ) : (role.cantidad)}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
+                                        {editingId === role.registro_id ? (
+
+                                            <Select
+                                                value={editingWeight}
+                                                onChange={(e)=>
+                                                    setEditingWeight(e.target.value)
+                                                }
+                                                className='w-[120px]'
+                                                sx={{fontSize:'14px', borderRadius:'10px'}}
+                                            >
+                                                <MenuItem value={'3kg'}>3kg</MenuItem>
+                                                <MenuItem value={'6kg'}>6kg</MenuItem>
+                                            </Select>
+                                        ) : (role.peso)}
                                     </td>
                                     <td className="px-6 py-4 whitespace-normal text-sm text-black">
                                         {role.hora}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        {editingId==role.registro_id ? (
                                         <div className="flex items-center space-x-3">
-
+                                            <button
+                                                onClick={()=>{handleConfirmEdit()}}
+                                                className="inline-flex items-center p-2 rounded-full text-green-600 hover:text-green-900 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200"
+                                                aria-label={`Editar ${role.peso}`}
+                                            >
+                                                <CheckIcon className="h-6 w-6" />
+                                            </button>
+                                            <button
+                                                onClick={()=>{handleCancelEdit()}}
+                                                className="inline-flex items-center p-2 rounded-full text-red-600 hover:text-red-900 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
+                                                aria-label={`Eliminar ${role.hora}`}
+                                            >
+                                                <XMarkIcon className="h-6 w-6" />
+                                            </button>
+                                        </div>
+                                        ) : (
+                                        <div className="flex items-center space-x-3">
                                                 <button
                                                     onClick={()=>{handleEdit(role)}}
                                                     className="inline-flex items-center p-2 rounded-full text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
@@ -197,8 +314,6 @@ export default function Roles() {
                                                 >
                                                     <PencilIcon className="h-5 w-5" />
                                                 </button>
-
-
                                                 <button
                                                     onClick={()=>{handleDelete(role)}}
                                                     className="inline-flex items-center p-2 rounded-full text-red-600 hover:text-red-900 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
@@ -206,8 +321,8 @@ export default function Roles() {
                                                 >
                                                     <TrashIcon className="h-5 w-5" />
                                                 </button>
-
                                         </div>
+                                            )}
                                     </td>
                                 </tr>
                             ))

@@ -4,7 +4,7 @@ import {
     getStock,
     getStockComponents,
     getOnly6kg,
-    getOnly3kg, guardarMovimiento, getTypeData
+    getOnly3kg, guardarMovimiento, getTypeData, borrarMovimiento, editarMovimiento
 } from "@/app/lib/db";
 import {NextRequest, NextResponse} from "next/server";
 
@@ -117,4 +117,41 @@ export async function POST(request: NextRequest) {
     }
 
 
+}
+
+export async function DELETE(request: NextRequest) {
+    try{
+        const id = request.nextUrl.searchParams.get('id');
+        if(id){
+            await borrarMovimiento(parseInt(id));
+            return NextResponse.json({status: 200});
+        }
+        return NextResponse.json(
+            { error: 'Internal Server Error' }, { status: 500 }
+        );
+    }
+    catch (error) {
+        console.error('error:', error);
+        return NextResponse.json(
+            { error: 'Internal Server Error' }, { status: 500 }
+        );
+    }
+}
+
+export async function PATCH(request: NextRequest) {
+    try{
+        const req = await request.json();
+        const id=req.editingId;
+        const tipo=req.editingType;
+        const cantidad=req.editingAmount;
+        const peso=req.editingWeight;
+            await editarMovimiento(id,cantidad,tipo,peso);
+            return NextResponse.json({status: 200});
+    }
+    catch (error) {
+        console.error('error:', error);
+        return NextResponse.json(
+            { error: 'Internal Server Error' }, { status: 500 }
+        );
+    }
 }

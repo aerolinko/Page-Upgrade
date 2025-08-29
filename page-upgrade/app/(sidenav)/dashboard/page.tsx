@@ -284,8 +284,8 @@ export default function Dashboard() {
 
               <div className="flex px-3 flex-row items-start justify-center gap-2 mb-5">
                 <LocalizationProvider adapterLocale={es} localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDateFns}>
-                  <DatePicker label={'Desde'}  slotProps={{actionBar: {actions: ['today']}}} value={fin} onChange={(newValue) => newValue && setFin(newValue)}/>
-                  <DatePicker label={'Hasta'}  slotProps={{actionBar: {actions: ['today']}}} value={inicio} format={'dd/MM/yyyy'}  onChange={(newValue) => newValue && setInicio(newValue)}/>
+                  <DatePicker label={'Desde'}  slotProps={{actionBar: {actions: ['today','accept']}}} value={fin} onChange={(newValue) => newValue && setFin(newValue)}/>
+                  <DatePicker label={'Hasta'}  slotProps={{actionBar: {actions: ['today','accept']}}} value={inicio} format={'dd/MM/yyyy'}  onChange={(newValue) => newValue && setInicio(newValue)}/>
                 </LocalizationProvider>
               </div>
             </div>
