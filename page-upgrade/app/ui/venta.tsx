@@ -87,7 +87,7 @@ export default function Venta({stateVen, setStateVen}:{
         setPeso("");
         setIsZero(true);
         setIsSelected(false);
-        setDistriuidor("0");
+        setDistriuidor("1000");
         setIsDistZero(true)
     }
 

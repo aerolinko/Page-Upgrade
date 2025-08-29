@@ -265,7 +265,7 @@ export default function Roles() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-normal text-sm text-black">
                                         {editingId === role.registro_id ? (
-                                            <input className='[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none border py-3 p-1.5 w-[100px] rounded-[10px]'
+                                            <input className='[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none border py-3 p-1.5 w-[60px] rounded-[10px]'
                                                    type='number'
                                                    min='1'
                                                    max='1000'
@@ -284,7 +284,7 @@ export default function Roles() {
                                                 onChange={(e)=>
                                                     setEditingWeight(e.target.value)
                                                 }
-                                                className='w-[120px]'
+                                                className='w-[70px]'
                                                 sx={{fontSize:'14px', borderRadius:'10px'}}
                                             >
                                                 <MenuItem value={'3kg'}>3kg</MenuItem>
