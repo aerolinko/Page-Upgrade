@@ -23,18 +23,21 @@ export default function Venta({stateVen, setStateVen}:{
     const [mensaje, setMensaje] = useState<string>();
     const [cantidad, setCantidad] = useState<string>('0');
     const [peso, setPeso] = useState<string>('');
+    const [distribuidor, setDistriuidor] = useState<string>('1000');
     const [isSelected, setIsSelected] = useState<boolean>(false);
     const [isZero, setIsZero] = useState<boolean>(true);
+    const [isDistZero, setIsDistZero] = useState<boolean>(true);
 
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         if((parseInt(cantidad) <= stockComponents.peso_6kg && peso=='6kg') ||
             (parseInt(cantidad) <= stockComponents.peso_3kg && peso=='3kg')) {
+
         const response = await fetch(`/api/data?venta=1`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({cantidad, peso})
+            body: JSON.stringify({cantidad, peso, distribuidor})
         });
         if (response.ok) {
             const res = await response.json();
@@ -44,8 +47,9 @@ export default function Venta({stateVen, setStateVen}:{
             reset();
             stateVen ? setStateVen(false) : setStateVen(true);
         } else {
+            const res = await response.json();
             forceExpiredLogOut(response);
-            setError("Error obteniendo los datos del servidor");
+            setError(res.error);
             }
         }
         else {
@@ -83,6 +87,8 @@ export default function Venta({stateVen, setStateVen}:{
         setPeso("");
         setIsZero(true);
         setIsSelected(false);
+        setDistriuidor("0");
+        setIsDistZero(true)
     }
 
     function forceExpiredLogOut(res: Response) {
@@ -145,6 +151,34 @@ export default function Venta({stateVen, setStateVen}:{
                     {peso && stockComponents &&(
                         <div className='text-sm text-red-300'> Stock disponible de {peso}: {peso=='6kg' ? new Intl.NumberFormat('es-VE').format(stockComponents.peso_6kg)  : new Intl.NumberFormat('es').format(stockComponents.peso_3kg)} </div>
                     )}
+                    <label htmlFor='distribuidor'> Código de distribuidor <a className='text-[12px] italic'>(1000 para la tienda)</a>  </label>
+
+                    <div className="relative">
+                        <input
+                            id="distribuidor"
+                            type="number"
+                            min="1000"
+                            value={distribuidor}
+                            onClick={()=>{
+                                if(isDistZero) {
+                                    setDistriuidor("")
+                                }
+                            }}
+                            onBlur={()=>{
+                                if(isDistZero || distribuidor === ""){
+                                    setDistriuidor("0")
+                                    setIsDistZero(true);
+                                }
+                            }}
+                            onChange={(e) => {
+                                setDistriuidor(e.target.value);
+                                setIsDistZero(false)
+                            }}
+                            className={`[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none peer block w-full rounded-md border
+                         ${isDistZero ? 'text-gray-400' : 'text-red-300'} border-white py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500`}
+                        />
+                        <ArrowUpCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-white" />
+                    </div>
                     {error && (
                         <div className="flex text-justify text-[15px] gap-4 mt-2 items-center flex-col sm:flex-row text-red-500">
                             <a>

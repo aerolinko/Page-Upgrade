@@ -30,6 +30,7 @@ export default function Roles() {
         peso:string;
         hora:string;
         registro_id:number;
+        cedula:number;
     }
 
     const [data, setData] = useState<Movimiento[]>([])
@@ -225,6 +226,13 @@ export default function Roles() {
                                 className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider  select-none"
 
                             >
+                                Distribuidor
+                            </th>
+                            <th
+                                scope="col"
+                                className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider  select-none"
+
+                            >
                                 Hora
                             </th>
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
@@ -283,6 +291,13 @@ export default function Roles() {
                                                 <MenuItem value={'6kg'}>6kg</MenuItem>
                                             </Select>
                                         ) : (role.peso)}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-normal text-sm text-black">
+                                        {role.cedula ? (
+                                            role.cedula
+                                        ):(
+                                         <a>Tienda Hielo Tia Ana</a>
+                                        )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-normal text-sm text-black">
                                         {role.hora}

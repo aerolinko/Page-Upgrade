@@ -78,8 +78,8 @@ export async function getOnly6kg(inicio: string, fin: string) {
 
 export async function getAllData() {
     try{
-        const query = `SELECT registro_id, fecha_correcta, tipodemovimiento, cantidad, peso,hora
-                       FROM registrocompleto
+        const query = `SELECT registro_id, fecha_correcta, tipodemovimiento, cantidad, peso,hora, cedula
+                       FROM registrocompleto left join distribuidor on cod_distribuidor=distribuidor_id
                        ORDER BY registro_id desc`;
         const [rows] = await pool.execute(query);
         return rows;
@@ -115,6 +115,29 @@ export async function getSpecialData() {
     }
 }
 
+export async function getDistributor(ced:number) {
+    try{
+        const query = `SELECT *
+                       FROM distribuidor WHERE cedula=${ced}`;
+        const [rows] = await pool.execute(query);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+
+export async function guardarVentaDistributor(ced:number,cantidad:number,peso:number) {
+        const dist = await getDistributor(ced);
+        if (dist.length>0) {
+            const cod = dist[0].distribuidor_id;
+            await guardarMovimiento('Venta', cantidad, peso, cod);
+        } else {
+            throw new Error(`distribuidor con cedula ${ced} no encontrado`);
+        }
+}
+
+
 export async function getStock() {
     try{
         const query = `SELECT SUM(Case when tipodemovimiento='Produccion' then cantidad else 0 end) - 
@@ -140,7 +163,7 @@ export async function getStockComponents() {
     }
 }
 
-export async function guardarMovimiento(tipodemovimiento:string, cantidad:number, peso:number) {
+export async function guardarMovimiento(tipodemovimiento:string, cantidad:number, peso:number, distribuidor:number|null) {
     try{
         const date = new Date();
         const formattedTime = new Intl.DateTimeFormat('en-US', {
@@ -150,9 +173,9 @@ export async function guardarMovimiento(tipodemovimiento:string, cantidad:number
         }).format(date).replace(/\bAM\b/gi, 'a.m.').replace(/\bPM\b/gi, 'p.m.');
         const formattedDate= format(date,'yyyy-MM-dd');
 
-        const query = `INSERT INTO registrocompleto (tipodemovimiento,cantidad,peso,hora,fecha_correcta) 
-                       VALUES (?,?,?,?,?)`;
-        const [rows,fields] = await pool.execute(query,[tipodemovimiento,cantidad,peso,formattedTime,formattedDate]);
+        const query = `INSERT INTO registrocompleto (tipodemovimiento,cantidad,peso,hora,fecha_correcta,cod_distribuidor) 
+                       VALUES (?,?,?,?,?,?)`;
+        const [rows,fields] = await pool.execute(query,[tipodemovimiento,cantidad,peso,formattedTime,formattedDate,distribuidor]);
         return rows;
     }
     catch (err) {

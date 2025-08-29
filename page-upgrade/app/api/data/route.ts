@@ -4,7 +4,14 @@ import {
     getStock,
     getStockComponents,
     getOnly6kg,
-    getOnly3kg, guardarMovimiento, getTypeData, borrarMovimiento, editarMovimiento, getSpecialData
+    getOnly3kg,
+    guardarMovimiento,
+    getTypeData,
+    borrarMovimiento,
+    editarMovimiento,
+    getSpecialData,
+    getDistributor,
+    guardarVentaDistributor
 } from "@/app/lib/db";
 import {NextRequest, NextResponse} from "next/server";
 
@@ -106,16 +113,27 @@ export async function POST(request: NextRequest) {
         const cantidad = req.cantidad;
 
         if (req && prod) {
-            await guardarMovimiento('Produccion',cantidad,peso);
+            await guardarMovimiento('Produccion',cantidad,peso,null);
             return NextResponse.json({ status: 200 });
         }
         if (req && venta) {
-            await guardarMovimiento('Venta',cantidad,peso);
-            return NextResponse.json({ status: 200 });
+            const  distribuidor = req.distribuidor;
+            if(parseInt(distribuidor)==1000) {
+                await guardarMovimiento('Venta',cantidad,peso,null);
+                return NextResponse.json({ status: 200 });
+            }else {
+                try {
+                    await guardarVentaDistributor(distribuidor, cantidad, peso);
+                    return NextResponse.json({status: 200});
+                }
+                catch(err:any) {
+                    return NextResponse.json({ error:err.toString() },{status: 500 })
+                }
+            }
         }
         if (req && special) {
             const motivo = req.motivo;
-            await guardarMovimiento(motivo,cantidad,peso);
+            await guardarMovimiento(motivo,cantidad,peso,null);
             return NextResponse.json({ status: 200 });
         }
 
@@ -126,7 +144,7 @@ export async function POST(request: NextRequest) {
     catch (error) {
         console.error('error:', error);
         return NextResponse.json(
-            { error: 'Internal Server Error' }, { status: 500 }
+            { error: error }, { status: 500 }
         );
     }
 
