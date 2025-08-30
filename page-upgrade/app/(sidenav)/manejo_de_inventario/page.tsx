@@ -469,14 +469,13 @@ export default function Dashboard() {
                 <div className='p-3 rounded-full bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300'>
                   <ArrowDownOnSquareIcon className="w-6 h-6" />
                 </div>
-
-                <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-
+                <h3 className="text-lg font-semibold text-gray-50 group-hover:text-blue-600 transition-colors">
+                  Manejo de la Producción
                 </h3>
               </div>
 
-              <p className="text-sm text-gray-200 group-hover:text-blue-500 transition-colors">
-                Manejo de la Producción
+              <p className="text-sm text-gray-300 group-hover:text-blue-500 transition-colors">
+                Manejo de la Producción de las bolsas de hielo
               </p>
             </div>
           </div>
@@ -495,14 +494,12 @@ export default function Dashboard() {
                       <div className='p-3 rounded-full bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300'>
                         <ArrowUpOnSquareIcon className="w-6 h-6" />
                       </div>
-
-                      <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-
+                      <h3 className="text-lg font-semibold text-gray-50 group-hover:text-blue-600 transition-colors">
+                        Manejo de las Ventas
                       </h3>
                     </div>
-
-                    <p className="text-sm text-gray-200 group-hover:text-blue-500 transition-colors">
-                      Manejo de las Ventas
+                    <p className="text-sm text-gray-300 group-hover:text-blue-500 transition-colors">
+                      Manejo de las Ventas por tienda y distribuidores
                     </p>
                   </div>
           </div>
@@ -520,14 +517,13 @@ export default function Dashboard() {
               <div className='p-3 rounded-full bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300'>
                 <ArrowPathRoundedSquareIcon className="w-6 h-6" />
               </div>
-
-              <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-
+              <h3 className="text-lg font-semibold text-gray-50 group-hover:text-blue-600 transition-colors">
+                Casos Especiales
               </h3>
             </div>
 
-            <p className="text-sm text-gray-200 group-hover:text-blue-500 transition-colors">
-              Casos especiales
+            <p className="text-sm text-gray-300 group-hover:text-blue-500 transition-colors">
+              Bolsas de hielo defectuosas o regaladas
             </p>
           </div>
         </div>

@@ -12,11 +12,10 @@ const pool = mysql.createPool({
 
 export async function getUser(username: string, password: string) {
     try {
-        const query = `SELECT * FROM usuarios WHERE username = ? AND pass = ?`;
+        const query = `SELECT username,nombre FROM usuarios,rol WHERE username = ? AND pass = ? and rol_id = fk_rol`;
         const [rows, fields] = await pool.execute(query, [username, password]);
         if (rows.length > 0) {
-            console.log(rows);
-            return rows[0].username;
+            return ({usuario:rows[0].username,rol:rows[0].nombre});
         }
         return null;
     } catch (err) {

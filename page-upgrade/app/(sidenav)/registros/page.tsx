@@ -11,6 +11,7 @@ import {
 import {redirect} from "next/navigation";
 import {format} from "date-fns";
 import {MenuItem, Select} from "@mui/material";
+import {getSession} from "@/app/lib/auth";
 
 export default function Roles() {
     const [filter, setFilter] = useState('');
@@ -22,6 +23,7 @@ export default function Roles() {
     const [editingAmount, setEditingAmount] = useState<string>('');
     const [editingType, setEditingType] = useState<string | null>(null);
     const [editingWeight, setEditingWeight] = useState<string | null>(null);
+    const [rol, setRol] = useState<string | null>(null);
 
     interface Movimiento {
         fecha_correcta: Date;
@@ -53,6 +55,12 @@ export default function Roles() {
     function forceExpiredLogOut(res: Response) {
         if (res.status === 401) {
             redirect('/');
+        }
+    }
+
+    async function checkNotAllowed(res: Response) {
+        if (res.status === 403) {
+            setError("No posees los permisos para realizar esa opearación");
         }
     }
 
@@ -105,8 +113,9 @@ export default function Roles() {
             await fetchAllData();
             await resetEdit();
         } else {
+            setError("Error editando los datos en el servidor");
             forceExpiredLogOut(response);
-            setError("Error eliminando los datos del servidor");
+            await checkNotAllowed(response);
         }
     }
 
@@ -130,8 +139,9 @@ export default function Roles() {
             const res = await response.json();
             await fetchAllData();
         } else {
-            forceExpiredLogOut(response);
             setError("Error eliminando los datos del servidor");
+            forceExpiredLogOut(response);
+            await checkNotAllowed(response);
         }
     }
 
@@ -145,7 +155,23 @@ export default function Roles() {
         else return e.target.value;
     }
 
+    async function getSession(){
+        const response = await fetch(`/api/login`, {
+            method: "GET",
+            headers: {"Content-Type": "application/json"},
+        });
+        if (response.ok) {
+            const res = await response.json();
+            setRol(res.session.payload.rol);
+        } else {
+            setError("Error obteniendo las credenciales del usuario");
+            forceExpiredLogOut(response);
+            await checkNotAllowed(response);
+        }
+    }
+
     useEffect(() => {
+        getSession()
         fetchAllData();
     }, []);
 
@@ -235,9 +261,14 @@ export default function Roles() {
                             >
                                 Hora
                             </th>
+                            {rol && (rol=='admin' || rol=='presidente') ? (
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                                 Acciones
                             </th>
+                                ):(
+                                  <></>
+                            )
+                            }
                         </tr>
                         </thead>
                         <tbody className="bg-gray-400 divide-y divide-gray-700">
@@ -302,8 +333,8 @@ export default function Roles() {
                                     <td className="px-6 py-4 whitespace-normal text-sm text-black">
                                         {role.hora}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         {editingId==role.registro_id ? (
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div className="flex items-center space-x-3">
                                             <button
                                                 onClick={()=>{handleConfirmEdit()}}
@@ -320,7 +351,9 @@ export default function Roles() {
                                                 <XMarkIcon className="h-6 w-6" />
                                             </button>
                                         </div>
-                                        ) : (
+                                        </td>
+                                        ) : (rol && (rol=='admin' || rol=='presidente') ? (
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div className="flex items-center space-x-3">
                                                 <button
                                                     onClick={()=>{handleEdit(role)}}
@@ -337,8 +370,12 @@ export default function Roles() {
                                                     <TrashIcon className="h-5 w-5" />
                                                 </button>
                                         </div>
+                                            </td>
+                                            ):(
+                                                <>
+                                                </>
+                                            )
                                             )}
-                                    </td>
                                 </tr>
                             ))
                         ) : (

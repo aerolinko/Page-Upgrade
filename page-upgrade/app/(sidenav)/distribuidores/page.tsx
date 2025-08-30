@@ -71,9 +71,9 @@ export default function LoginPage() {
 
     return (
 
-        <div className="flex flex-col items-center justify-center min-h-screen">
-            <div className="bg-white p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-dvw max-w-fit transform transition-all duration-300 ">
-                <h1 className="text-2xl font-bold text-black mb-8">Registrar Distribuidor</h1>
+        <div className="flex flex-col items-center justify-center min-h-full">
+            <div className="bg-gray-700 p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-dvw max-w-fit transform transition-all duration-300 ">
+                <h1 className="text-2xl font-bold text-white mb-8">Registrar Distribuidor</h1>
                 <div className="w-full">
                     <form onSubmit={handleSubmit} className="grid relative items-center grid-rows-3 sm:grid-cols-2 gap-5 sm:gap-7 pb-18">
                         <div className="relative">
@@ -83,9 +83,9 @@ export default function LoginPage() {
                                 value={firstName}
                                 onChange={(e) => setFistName(e.target.value)}
                                 required
-                                className="peer block w-full rounded-md border text-gray-900 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500 "
+                                className="peer block w-full rounded-md border text-gray-100 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-300 "
                             />
-                            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-300 peer-focus:text-gray-100" />
 
                         </div>
                         <div className="relative">
@@ -95,9 +95,9 @@ export default function LoginPage() {
                                 value={secondFirstName}
                                 onChange={(e) => setSecondFistName(e.target.value)}
                                 required
-                                className="peer block w-full rounded-md border text-gray-900 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500 "
+                                className="peer block w-full rounded-md border text-gray-100 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-300 "
                             />
-                            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-300 peer-focus:text-gray-100" />
 
                         </div>
                         <div className="relative">
@@ -107,9 +107,9 @@ export default function LoginPage() {
                                 value={lastName}
                                 onChange={(e) => setLastName(e.target.value)}
                                 required
-                                className="peer block w-full rounded-md border text-gray-900 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                                className="peer block w-full rounded-md border text-gray-100 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-300"
                             />
-                            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-300 peer-focus:text-gray-100" />
                         </div>
                         <div className="relative">
                             <input
@@ -118,9 +118,9 @@ export default function LoginPage() {
                                 value={secondLastName}
                                 onChange={(e) => setSecondLastName(e.target.value)}
                                 required
-                                className="peer block w-full rounded-md border text-gray-900 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                                className="peer block w-full rounded-md border text-gray-100 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-300"
                             />
-                            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-300 peer-focus:text-gray-100" />
                         </div>
                         <div className="relative">
                             <input
@@ -131,9 +131,9 @@ export default function LoginPage() {
                                 value={id}
                                 onChange={(e) => setID(e.target.value)}
                                 required
-                                className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none peer block w-full rounded-md border text-gray-900 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                                className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none peer block w-full rounded-md border text-gray-100 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-300"
                             />
-                            <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                            <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-300 peer-focus:text-gray-100" />
                         </div>
                         <div className="relative">
                             <input
@@ -143,9 +143,9 @@ export default function LoginPage() {
                                 min='1000000000'
                                 onChange={(e) => setPhoneNumber(e.target.value)}
                                 required
-                                className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none peer block w-full rounded-md border text-gray-900 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                                className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none peer block w-full rounded-md border text-gray-100 border-gray-300 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-300"
                             />
-                            <PhoneIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                            <PhoneIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-300 peer-focus:text-gray-100" />
                         </div>
                         {mensaje && (
                             <Alert severity="success" className={'col-span-2 justify-center'} >

@@ -12,6 +12,13 @@ export async function middleware(request: NextRequest) {
     }
 
     if(await getSession()) {
+        if(request.method == 'PATCH' || request.method == 'DELETE'){
+         const session = await getSession();
+         // @ts-ignore
+            if(session.payload.rol!='admin' || session.payload.rol!='presidente'){
+                return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+            }
+        }
         return await updateSession(request);
     }
 
