@@ -127,6 +127,14 @@ export async function getDistributor(ced:number) {
     }
 }
 
+export async function guardarDistribuidor(ced:number,firstName:string,secondFirstName:string,secondLastName:string, lastName:string,phoneNumber:string) {
+        const query = `INSERT INTO distribuidor (cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido,telefono) 
+VALUES (${ced},'${firstName}','${secondFirstName}','${lastName}','${secondLastName}','${phoneNumber}')`;
+        const [rows] = await pool.execute(query);
+        return rows;
+}
+
+
 export async function guardarVentaDistributor(ced:number,cantidad:number,peso:number) {
         const dist = await getDistributor(ced);
         if (dist.length>0) {
@@ -199,6 +207,27 @@ export async function editarMovimiento(id:number,cantidad:number,tipodemovimient
         const query = `UPDATE registrocompleto set cantidad=(${cantidad}), tipodemovimiento=('${tipodemovimiento}'), peso=('${peso}')
                         where registro_id='${id}'`;
         const [rows,fields] = await pool.execute(query);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+
+
+export async function getDistributorsData() {
+    try{
+        const query = `SELECT primer_nombre, primer_apellido, cedula, SUM(CASE WHEN tipodemovimiento = 'Venta' THEN cantidad END) AS venta
+                       FROM registrocompleto, distribuidor
+                       WHERE cod_distribuidor=distribuidor_id and YEAR(fecha_correcta) = YEAR(NOW()) and MONTH(fecha_correcta)=MONTH(NOW())
+                       and activo=true
+                       GROUP BY MONTH(fecha_correcta), primer_nombre, primer_apellido, cedula
+                       Union
+                       SELECT 'Tienda Hielo' AS primer_nombre, 'Tía Ana' as primer_apellido, 1000 as cedula, SUM(CASE WHEN tipodemovimiento = 'Venta' THEN cantidad END) AS venta
+                       FROM registrocompleto
+                       WHERE cod_distribuidor is null and YEAR(fecha_correcta) = YEAR(NOW()) and MONTH(fecha_correcta)=MONTH(NOW())
+                       GROUP BY MONTH(fecha_correcta), primer_nombre, primer_apellido, cedula     `;
+        const [rows] = await pool.execute(query);
         return rows;
     }
     catch (err) {

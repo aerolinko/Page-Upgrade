@@ -10,8 +10,7 @@ import {
     borrarMovimiento,
     editarMovimiento,
     getSpecialData,
-    getDistributor,
-    guardarVentaDistributor
+    guardarVentaDistributor, getDistributorsData
 } from "@/app/lib/db";
 import {NextRequest, NextResponse} from "next/server";
 
@@ -50,6 +49,14 @@ export async function GET(request: NextRequest) {
                     return NextResponse.json({ status: 200, data });
                 }
             }
+
+        const dist = request.nextUrl.searchParams.get('dist');
+        if (dist) {
+            const data = await getDistributorsData();
+            if (data) {
+                return NextResponse.json({ status: 200, data });
+            }
+        }
 
         const venta = request.nextUrl.searchParams.get('venta');
         if (venta) {

@@ -17,6 +17,7 @@ import {esES} from "@mui/x-date-pickers/locales";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {ToggleButton, ToggleButtonGroup, toggleButtonGroupClasses} from "@mui/material";
+import {now} from "d3-timer";
 
 export default function Dashboard() {
   interface Data {
@@ -36,6 +37,20 @@ export default function Dashboard() {
     peso_6kg: number;
   }
 
+  interface Distribuidor {
+    cedula: number;
+    venta: number;
+    primer_nombre: string;
+    primer_apellido: string;
+    segundo_nombre: string;
+    segundo_apellido: string;
+  }
+
+  interface Serie {
+    data: number[];
+    label:string
+  }
+
   const [error, setError] = useState<string>()
   const [data, setData] = useState<Movimiento[]>()
   const [stock, setStock] = useState<number>(0)
@@ -44,6 +59,8 @@ export default function Dashboard() {
   const [inicio, setInicio] = useState<Date>(new Date())
   const [fin, setFin] = useState<Date>(new Date(Date.now() - 7*60*60*24*1000))
   const [dataAmountVen, setDataAmountVen] = useState<number[]>()
+  const [dataDist, setDataDist] = useState<Distribuidor[]>()
+  const [serieDist, setSerieDist] = useState<Serie[]>()
   const [dataTime, setDataTime] = useState<Date[]>()
   const [dataAmountPro, setDataAmountPro] = useState<number[]>()
   const [filterText, setFilterText] = useState('')
@@ -130,6 +147,21 @@ export default function Dashboard() {
 
   }
 
+  async function fetchDistData() {
+    const response = await fetch(`/api/data?dist=1`, {
+      method: "GET",
+      headers: {"Content-Type": "application/json"},
+    });
+    if (response.ok) {
+      const res = await response.json();
+      setDataDist(res.data);
+    } else {
+      forceExpiredLogOut(response);
+      setError("Error obteniendo los datos del servidor");
+    }
+
+  }
+
   async function fetchStock() {
     const response = await fetch(`/api/data?stock=1`, {
       method: "GET",
@@ -166,6 +198,14 @@ export default function Dashboard() {
 
   }
 
+  async function fillDistSerie() {
+    const list:Serie[]=[];
+    dataDist?.forEach((p:Distribuidor) => {
+        list.push({data:[p.venta],label:p.primer_nombre+' '+p.primer_apellido})
+    });
+    setSerieDist(list);
+  }
+
   function forceExpiredLogOut(res: Response) {
    if (res.status === 401) {
      redirect('/');
@@ -177,11 +217,16 @@ export default function Dashboard() {
     fetchAllData();
     fetchStock();
     fetchStockComponents();
+    fetchDistData();
   }, []);
 
   useEffect(() => {
     fetchData();
   }, [inicio,fin,is3kgEnabled,is6kgEnabled]);
+
+  useEffect(() => {
+    fillDistSerie();
+  }, [dataDist]);
 
   useEffect(() => {
     if(selection=='3kg'){setIs3kgEnabled(true); setIs6kgEnabled(false)}
@@ -474,6 +519,60 @@ export default function Dashboard() {
         ) : !error && (
             <p>Cargando gráficas...</p>
         )}
+
+        {dataDist && serieDist ? (
+            <div className="relative flex flex-col w-full 2xl:w-[540px] h-full bg-gray-300 rounded-xl p-1 outline-1 shadow-md">
+              <div className="flex gap-4 text-black mt-2 text-[20px] font-semibold items-center flex-col">
+                <a>
+                  Ventas por Distribuidor Particular
+                </a>
+              </div>
+              {/*
+              <div className='z-1 right-2 top-2 absolute'>
+              <ToggleButtonGroup
+                  color="primary"
+                  sx={{justifyContent: "end",[`& .${toggleButtonGroupClasses.selected}`]:{
+                      borderColor: "deepskyblue",
+                      color:'black',
+                      fontSize:{xs: "10px", lg:"14px"},
+                      borderWidth:"2px",
+                    },[`& .${toggleButtonGroupClasses.grouped}`]:{
+                    color:'black',
+                      fontSize:{xs: "10px", lg:"14px"},
+                      borderWidth:"2px",
+                  }}}
+                  exclusive
+                  aria-label="Platform"
+                  orientation={'vertical'}
+                  value={selection}
+                  onChange={(e,newSelection:string) => {setSelection(newSelection)}}
+              >
+                <ToggleButton value="ambos">Ambos</ToggleButton>
+                <ToggleButton value="6kg">6kg</ToggleButton>
+                <ToggleButton value="3kg">3kg</ToggleButton>
+              </ToggleButtonGroup>
+              </div>
+              */}
+              <BarChart
+                  xAxis={[{
+                    data: [new Date()],
+                    scaleType: 'band',
+                    valueFormatter: (date) => format(date, 'MMMM',{ locale: es })
+                        .replace(/(\b\w)/g, (match) => match.toUpperCase())
+                  }]}
+                  series={serieDist}
+                  className=" min-w-full min-h-[300px] max-h-[300px]"/>
+              <div className="flex px-3 flex-row items-start justify-center gap-2 mb-5">
+                <LocalizationProvider adapterLocale={es} localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDateFns}>
+
+                </LocalizationProvider>
+              </div>
+            </div>
+
+        ) : !error && (
+            <p>Cargando gráficas...</p>
+        )}
+
 
       </main>
     </div>
