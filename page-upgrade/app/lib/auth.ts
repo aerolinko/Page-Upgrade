@@ -29,9 +29,17 @@ export async function decrypt(input: string) {
 }
 
 export async function getSession() {
-    const session = (await cookies()).get('session')?.value;
-    if (!session) return null;
-    return await decrypt(session);
+    try {
+        const session = (await cookies()).get('session')?.value;
+        if (!session) return null;
+        return await decrypt(session);
+    }
+    catch (err){
+        // @ts-ignore
+        console.error(err.code)
+        await logOut();
+        return null;
+    }
 }
 
 export async function updateSession(request: NextRequest){
@@ -51,9 +59,9 @@ export async function updateSession(request: NextRequest){
     return res;
 }
 
-export async function logOut(request: NextRequest){
+export async function logOut(){
     try{
-    const session = request.cookies.get('session')?.value;
+    const session = (await cookies()).get('session')?.value;
     if (!session) return;
     (await cookies()).delete('session');
     return NextResponse.json({result: 'Sesión Cerrada'},{status: 200});
