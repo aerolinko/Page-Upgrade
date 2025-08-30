@@ -84,6 +84,8 @@ export default function Dashboard() {
   const [selection,setSelection] = useState<string>('ambos')
   const [showHighlight, setShowHighlight] = React.useState(true);
   const [showTooltip, setShowTooltip] = React.useState(true);
+  const [monthPicker, setMonthPicker] = useState<Date>(new Date(Date.now()));
+  const [selectionDist,setSelectionDist] = useState<string>('todos')
 
   const handleHighlightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setShowHighlight(event.target.checked);
@@ -188,7 +190,7 @@ export default function Dashboard() {
   }
 
   async function fetchDistData() {
-    const response = await fetch(`/api/data?dist=1`, {
+    const response = await fetch(`/api/distribuidor?dist=1&mes=${format(monthPicker,'yyyy-MM-dd')}&modo=${selectionDist}`, {
       method: "GET",
       headers: {"Content-Type": "application/json"},
     });
@@ -246,6 +248,15 @@ export default function Dashboard() {
     setSerieDist(list);
   }
 
+    const handleSelectDist = (
+        event: React.MouseEvent<HTMLElement>,
+        newSelection: string | null,
+    ) => {
+        if (newSelection !== null) {
+            setSelectionDist(newSelection);
+        }
+    };
+
   function forceExpiredLogOut(res: Response) {
    if (res.status === 401) {
      redirect('/');
@@ -268,6 +279,10 @@ export default function Dashboard() {
   useEffect(() => {
     fillDistSerie();
   }, [dataDist]);
+
+    useEffect(() => {
+        fetchDistData();
+    }, [monthPicker,selectionDist]);
 
   useEffect(() => {
     if(dataMeta && dataMeta.venta>=dataMeta.meta){
@@ -574,35 +589,12 @@ export default function Dashboard() {
                   Ventas por Distribuidor Particular
                 </a>
               </div>
-              {/*
-              <div className='z-1 right-2 top-2 absolute'>
-              <ToggleButtonGroup
-                  color="primary"
-                  sx={{justifyContent: "end",[`& .${toggleButtonGroupClasses.selected}`]:{
-                      borderColor: "deepskyblue",
-                      color:'black',
-                      fontSize:{xs: "10px", lg:"14px"},
-                      borderWidth:"2px",
-                    },[`& .${toggleButtonGroupClasses.grouped}`]:{
-                    color:'black',
-                      fontSize:{xs: "10px", lg:"14px"},
-                      borderWidth:"2px",
-                  }}}
-                  exclusive
-                  aria-label="Platform"
-                  orientation={'vertical'}
-                  value={selection}
-                  onChange={(e,newSelection:string) => {setSelection(newSelection)}}
-              >
-                <ToggleButton value="ambos">Ambos</ToggleButton>
-                <ToggleButton value="6kg">6kg</ToggleButton>
-                <ToggleButton value="3kg">3kg</ToggleButton>
-              </ToggleButtonGroup>
-              </div>
-              */}
+
+
+
               <BarChart
                   yAxis={[{
-                    data: [new Date()],
+                    data: [monthPicker],
                     scaleType: 'band',
                     valueFormatter: (date) => format(date, 'MMM',{ locale: es })
                         .replace(/(\b\w)/g, (match) => match.toUpperCase())
@@ -617,10 +609,30 @@ export default function Dashboard() {
                   layout="horizontal"
                   series={serieDist}
                   className=" min-w-full min-h-[300px] max-h-[300px]"/>
-              <div className="flex px-3 flex-row items-start justify-center gap-2 mb-5">
+              <div className="flex px-3 flex-row items-center justify-evenly gap-2 mb-5">
                 <LocalizationProvider adapterLocale={es} localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDateFns}>
-
+                    <DatePicker label={'Mes'} value={monthPicker} views={['month','year']} onChange={(e) => {e && setMonthPicker(e)}} />
                 </LocalizationProvider>
+                  <ToggleButtonGroup
+                      color="primary"
+                      sx={{[`& .${toggleButtonGroupClasses.selected}`]:{
+                              borderColor: "deepskyblue",
+                              color:'black',
+                              fontSize:{xs: "10px", lg:"12px"},
+                              borderWidth:"2px",
+                          },[`& .${toggleButtonGroupClasses.grouped}`]:{
+                              color:'black',
+                              fontSize:{xs: "10px", lg:"12px"},
+                              borderWidth:"2px",
+                          }}}
+                      exclusive
+                      aria-label="Platform"
+                      value={selectionDist}
+                      onChange={handleSelectDist}
+                  >
+                      <ToggleButton value="todos">Todos</ToggleButton>
+                      <ToggleButton value="particulares">Particulares</ToggleButton>
+                  </ToggleButtonGroup>
               </div>
             </div>
 
@@ -699,32 +711,6 @@ export default function Dashboard() {
                   Meta de ventas mensual
                 </a>
               </div>
-              {/*
-              <div className='z-1 right-2 top-2 absolute'>
-              <ToggleButtonGroup
-                  color="primary"
-                  sx={{justifyContent: "end",[`& .${toggleButtonGroupClasses.selected}`]:{
-                      borderColor: "deepskyblue",
-                      color:'black',
-                      fontSize:{xs: "10px", lg:"14px"},
-                      borderWidth:"2px",
-                    },[`& .${toggleButtonGroupClasses.grouped}`]:{
-                    color:'black',
-                      fontSize:{xs: "10px", lg:"14px"},
-                      borderWidth:"2px",
-                  }}}
-                  exclusive
-                  aria-label="Platform"
-                  orientation={'vertical'}
-                  value={selection}
-                  onChange={(e,newSelection:string) => {setSelection(newSelection)}}
-              >
-                <ToggleButton value="ambos">Ambos</ToggleButton>
-                <ToggleButton value="6kg">6kg</ToggleButton>
-                <ToggleButton value="3kg">3kg</ToggleButton>
-              </ToggleButtonGroup>
-              </div>
-              */}
               <Gauge value={dataMeta.venta} valueMax={dataMeta.meta} height={329} text={({ value, valueMax }) => `${value} / ${valueMax}`}
                      className={'text-xl'}/>
               <div className="flex px-3 flex-row items-start justify-center gap-2 mb-5">

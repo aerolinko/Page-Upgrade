@@ -213,21 +213,31 @@ export async function editarMovimiento(id:number,cantidad:number,tipodemovimient
     }
 }
 
-
-export async function getDistributorsData() {
+export async function getDistributorsData(fecha:string,modo:string) {
     try{
-        const query = `SELECT primer_nombre, primer_apellido, cedula, SUM(CASE WHEN tipodemovimiento = 'Venta' THEN cantidad END) AS venta
+        if(modo==='todos'){
+            const query = `SELECT primer_nombre, primer_apellido, cedula, SUM(CASE WHEN tipodemovimiento = 'Venta' THEN cantidad END) AS venta
                        FROM registrocompleto, distribuidor
-                       WHERE cod_distribuidor=distribuidor_id and YEAR(fecha_correcta) = YEAR(NOW()) and MONTH(fecha_correcta)=MONTH(NOW())
+                       WHERE cod_distribuidor=distribuidor_id and YEAR(fecha_correcta) = YEAR('${fecha}') and MONTH(fecha_correcta) = MONTH('${fecha}') 
                        and activo=true
                        GROUP BY MONTH(fecha_correcta), primer_nombre, primer_apellido, cedula
                        Union
                        SELECT 'Tienda Hielo' AS primer_nombre, 'Tía Ana' as primer_apellido, 1000 as cedula, SUM(CASE WHEN tipodemovimiento = 'Venta' THEN cantidad END) AS venta
                        FROM registrocompleto
-                       WHERE cod_distribuidor is null and YEAR(fecha_correcta) = YEAR(NOW()) and MONTH(fecha_correcta)=MONTH(NOW())
-                       GROUP BY MONTH(fecha_correcta), primer_nombre, primer_apellido, cedula     `;
-        const [rows] = await pool.execute(query);
-        return rows;
+                       WHERE cod_distribuidor is null and YEAR(fecha_correcta) = YEAR('${fecha}') and MONTH(fecha_correcta)=MONTH('${fecha}')
+                       GROUP BY MONTH(fecha_correcta), primer_nombre, primer_apellido, cedula`;
+            const [rows] = await pool.execute(query);
+            return rows;
+        }
+        else{
+            const query = `SELECT primer_nombre, primer_apellido, cedula, SUM(CASE WHEN tipodemovimiento = 'Venta' THEN cantidad END) AS venta
+                       FROM registrocompleto, distribuidor
+                       WHERE cod_distribuidor=distribuidor_id and YEAR(fecha_correcta) = YEAR('${fecha}') and MONTH(fecha_correcta) = MONTH('${fecha}') 
+                       and activo=true
+                       GROUP BY MONTH(fecha_correcta), primer_nombre, primer_apellido, cedula`;
+            const [rows] = await pool.execute(query);
+            return rows;
+        }
     }
     catch (err) {
         console.error('Error executing query:', err);

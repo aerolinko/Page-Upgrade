@@ -1,5 +1,19 @@
 import {NextRequest, NextResponse} from "next/server";
-import {guardarDistribuidor, guardarMovimiento, guardarVentaDistributor} from "@/app/lib/db";
+import {getDistributorsData, guardarDistribuidor} from "@/app/lib/db";
+
+export async function GET(request:NextRequest){
+    const dist = request.nextUrl.searchParams.get('dist');
+    const mes = request.nextUrl.searchParams.get('mes');
+    const modo = request.nextUrl.searchParams.get('modo');
+    if (dist && mes && modo) {
+        const data = await getDistributorsData(mes,modo);
+        if (data) {
+            return NextResponse.json({ status: 200, data });
+        }
+    }
+}
+
+
 
 export async function POST(request: NextRequest) {
     try{

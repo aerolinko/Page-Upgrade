@@ -50,14 +50,6 @@ export async function GET(request: NextRequest) {
                 }
             }
 
-        const dist = request.nextUrl.searchParams.get('dist');
-        if (dist) {
-            const data = await getDistributorsData();
-            if (data) {
-                return NextResponse.json({ status: 200, data });
-            }
-        }
-
         const venta = request.nextUrl.searchParams.get('venta');
         if (venta) {
             const data = await getTypeData('Venta');
