@@ -234,3 +234,16 @@ export async function getDistributorsData() {
     }
 }
 
+export async function getDataGoalPerMonth() {
+    try{
+        const query = `SELECT SUM(cantidad) as venta, meta FROM registrocompleto, meta
+                       WHERE tipodemovimiento='Venta' AND MONTH(fecha_correcta)=MONTH(NOW())
+                       AND meta_id=(SELECT max(meta_id) from meta) GROUP BY meta`;
+        const [rows,fields] = await pool.execute(query);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+

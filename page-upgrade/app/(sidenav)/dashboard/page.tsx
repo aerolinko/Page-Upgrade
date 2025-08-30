@@ -1,10 +1,11 @@
 'use client'
 import {
-  BarChart,
+  areaElementClasses,
+  BarChart, chartsAxisHighlightClasses,
   Gauge,
-  gaugeClasses,
+  gaugeClasses, lineElementClasses,
   pieArcLabelClasses,
-  PieChart
+  PieChart, SparkLineChart
 } from "@mui/x-charts";
 import React, {useState, useEffect} from "react";
 import {format} from "date-fns";
@@ -16,8 +17,15 @@ import {MagnifyingGlassIcon} from "@heroicons/react/24/outline";
 import {esES} from "@mui/x-date-pickers/locales";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
-import {ToggleButton, ToggleButtonGroup, toggleButtonGroupClasses} from "@mui/material";
+import {
+  LinearProgress,
+  linearProgressClasses,
+  ToggleButton,
+  ToggleButtonGroup,
+  toggleButtonGroupClasses
+} from "@mui/material";
 import {now} from "d3-timer";
+import {ProgressBar} from "primereact/progressbar";
 
 export default function Dashboard() {
   interface Data {
@@ -51,8 +59,15 @@ export default function Dashboard() {
     label:string
   }
 
+  interface Meta {
+    venta: number;
+    meta: number;
+  }
+
   const [error, setError] = useState<string>()
   const [data, setData] = useState<Movimiento[]>()
+  const [dataMeta, setDataMeta] = useState<Meta>()
+  const [isMetaReached, setIsMetaReached] = useState<boolean>(false)
   const [stock, setStock] = useState<number>(0)
   const [stockMax, setStockMax] = useState<number>(0)
   const [stockComponents, setStockComponents] = useState<StockComponent>()
@@ -67,6 +82,16 @@ export default function Dashboard() {
   const [is3kgEnabled, setIs3kgEnabled] = useState<boolean>(true)
   const [is6kgEnabled, setIs6kgEnabled] = useState<boolean>(true)
   const [selection,setSelection] = useState<string>('ambos')
+  const [showHighlight, setShowHighlight] = React.useState(true);
+  const [showTooltip, setShowTooltip] = React.useState(true);
+
+  const handleHighlightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setShowHighlight(event.target.checked);
+  };
+
+  const handleTooltipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setShowTooltip(event.target.checked);
+  };
 
  const columns = [
    {
@@ -147,6 +172,21 @@ export default function Dashboard() {
 
   }
 
+  async function fetchDataMeta() {
+    const response = await fetch(`/api/meta`, {
+      method: "GET",
+      headers: {"Content-Type": "application/json"},
+    });
+    if (response.ok) {
+      const res = await response.json();
+      setDataMeta(res.data[0]);
+    } else {
+      forceExpiredLogOut(response);
+      setError("Error obteniendo los datos del servidor");
+    }
+
+  }
+
   async function fetchDistData() {
     const response = await fetch(`/api/data?dist=1`, {
       method: "GET",
@@ -218,6 +258,7 @@ export default function Dashboard() {
     fetchStock();
     fetchStockComponents();
     fetchDistData();
+    fetchDataMeta();
   }, []);
 
   useEffect(() => {
@@ -227,6 +268,12 @@ export default function Dashboard() {
   useEffect(() => {
     fillDistSerie();
   }, [dataDist]);
+
+  useEffect(() => {
+    if(dataMeta && dataMeta.venta>=dataMeta.meta){
+      setIsMetaReached(true);
+    }
+  }, [dataMeta]);
 
   useEffect(() => {
     if(selection=='3kg'){setIs3kgEnabled(true); setIs6kgEnabled(false)}
@@ -554,14 +601,125 @@ export default function Dashboard() {
               </div>
               */}
               <BarChart
-                  xAxis={[{
+                  yAxis={[{
                     data: [new Date()],
                     scaleType: 'band',
-                    valueFormatter: (date) => format(date, 'MMMM',{ locale: es })
+                    valueFormatter: (date) => format(date, 'MMM',{ locale: es })
                         .replace(/(\b\w)/g, (match) => match.toUpperCase())
                   }]}
+                  layout="horizontal"
                   series={serieDist}
                   className=" min-w-full min-h-[300px] max-h-[300px]"/>
+              <div className="flex px-3 flex-row items-start justify-center gap-2 mb-5">
+                <LocalizationProvider adapterLocale={es} localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDateFns}>
+
+                </LocalizationProvider>
+              </div>
+            </div>
+
+        ) : !error && (
+            <p>Cargando gráficas...</p>
+        )}
+
+        {/*dataDist && serieDist ? (
+            <div className="relative flex flex-col w-full 2xl:w-[540px] h-full bg-gray-300 rounded-xl p-1 outline-1 shadow-md">
+              <div className="flex gap-4 text-black mt-2 text-[20px] font-semibold items-center flex-col">
+                <a>
+                  Tendencia de bolsas no cobradas
+                </a>
+              </div>
+
+
+              {/*
+              <div className='z-1 right-2 top-2 absolute'>
+              <ToggleButtonGroup
+                  color="primary"
+                  sx={{justifyContent: "end",[`& .${toggleButtonGroupClasses.selected}`]:{
+                      borderColor: "deepskyblue",
+                      color:'black',
+                      fontSize:{xs: "10px", lg:"14px"},
+                      borderWidth:"2px",
+                    },[`& .${toggleButtonGroupClasses.grouped}`]:{
+                    color:'black',
+                      fontSize:{xs: "10px", lg:"14px"},
+                      borderWidth:"2px",
+                  }}}
+                  exclusive
+                  aria-label="Platform"
+                  orientation={'vertical'}
+                  value={selection}
+                  onChange={(e,newSelection:string) => {setSelection(newSelection)}}
+              >
+                <ToggleButton value="ambos">Ambos</ToggleButton>
+                <ToggleButton value="6kg">6kg</ToggleButton>
+                <ToggleButton value="3kg">3kg</ToggleButton>
+              </ToggleButtonGroup>
+              </div>
+               }
+
+
+              <SparkLineChart
+                  showHighlight={showHighlight}
+                  showTooltip={showTooltip}
+                  data={[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,18]}
+                  plotType={'line'}
+                  area={true}
+                  sx={{
+                [`& .${areaElementClasses.root}`]: {opacity: 0.2},
+                [`& .${lineElementClasses.root}`]: {strokeWidth: 3},
+                [`& .${chartsAxisHighlightClasses.root}`]: {
+                  stroke: 'rgb(137, 86, 255)',
+                  strokeDasharray: 'none',
+                  strokeWidth: 2,
+                  }}}
+                    className=" min-w-full min-h-[300px] max-h-[300px]"/>
+              <div className="flex px-3 flex-row items-start justify-center gap-2 mb-5">
+                <LocalizationProvider adapterLocale={es} localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDateFns}>
+
+                </LocalizationProvider>
+              </div>
+            </div>
+
+        ) : !error && (
+            <p>Cargando gráficas...</p>
+        )
+        */}
+
+        {dataMeta ? (
+            <div className="flex justify-center flex-col w-full 2xl:w-[540px] h-full bg-gray-300 rounded-xl p-1 outline-1 shadow-md">
+              <div className="flex gap-4 text-black mt-2 text-[20px] font-semibold items-center flex-col">
+                <a>
+                  Meta de ventas mensual
+                </a>
+              </div>
+              {/*
+              <div className='z-1 right-2 top-2 absolute'>
+              <ToggleButtonGroup
+                  color="primary"
+                  sx={{justifyContent: "end",[`& .${toggleButtonGroupClasses.selected}`]:{
+                      borderColor: "deepskyblue",
+                      color:'black',
+                      fontSize:{xs: "10px", lg:"14px"},
+                      borderWidth:"2px",
+                    },[`& .${toggleButtonGroupClasses.grouped}`]:{
+                    color:'black',
+                      fontSize:{xs: "10px", lg:"14px"},
+                      borderWidth:"2px",
+                  }}}
+                  exclusive
+                  aria-label="Platform"
+                  orientation={'vertical'}
+                  value={selection}
+                  onChange={(e,newSelection:string) => {setSelection(newSelection)}}
+              >
+                <ToggleButton value="ambos">Ambos</ToggleButton>
+                <ToggleButton value="6kg">6kg</ToggleButton>
+                <ToggleButton value="3kg">3kg</ToggleButton>
+              </ToggleButtonGroup>
+              </div>
+              */}
+              <Gauge value={dataMeta.venta} valueMax={dataMeta.meta} height={329} text={({ value, valueMax }) => `${value} / ${valueMax}`}
+                     className={'text-xl'}/>
               <div className="flex px-3 flex-row items-start justify-center gap-2 mb-5">
                 <LocalizationProvider adapterLocale={es} localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDateFns}>
 

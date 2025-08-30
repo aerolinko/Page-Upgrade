@@ -60,7 +60,7 @@ export default function Roles() {
 
     async function checkNotAllowed(res: Response) {
         if (res.status === 403) {
-            setError("No posees los permisos para realizar esa opearación");
+            setError("No posees los permisos para realizar esa operación");
         }
     }
 
@@ -156,7 +156,7 @@ export default function Roles() {
     }
 
     async function getSession(){
-        const response = await fetch(`/api/login`, {
+        const response = await fetch(`/api/session`, {
             method: "GET",
             headers: {"Content-Type": "application/json"},
         });

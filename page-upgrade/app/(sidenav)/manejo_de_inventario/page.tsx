@@ -455,7 +455,7 @@ export default function Dashboard() {
         {!isProduccion && !isVenta && !isSpecial && (
       <div className="flex xl:flex-row flex-col w-fit gap-10">
 
-          <div className='group relative flex 2xl:w-[400px] sm:w-[300px] w-[250px] flex-col items-center justify-center p-6 rounded-xl transition-all duration-300
+          <div className='group relative flex 2xl:w-[400px] sm:w-[300px] w-[280px] flex-col items-center justify-center p-6 rounded-xl transition-all duration-300
            bg-gray-700 border border-gray-200 shadow-sm hover:shadow-lg hover:border-blue-500 hover:bg-blue-50
              h-full min-h-[180px] cursor-pointer'
                onClick={()=>{
@@ -480,7 +480,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-                <div className='group relative 2xl:w-[400px] sm:w-[300px] w-[250px] flex flex-col items-center justify-center p-6 rounded-xl transition-all duration-300
+                <div className='group relative 2xl:w-[400px] sm:w-[300px] w-[280px] flex flex-col items-center justify-center p-6 rounded-xl transition-all duration-300
            bg-gray-700 border border-gray-200 shadow-sm hover:shadow-lg hover:border-blue-500 hover:bg-blue-50
              h-full min-h-[180px] cursor-pointer'
                      onClick={()=>{
@@ -503,7 +503,7 @@ export default function Dashboard() {
                     </p>
                   </div>
           </div>
-        <div className='group relative flex 2xl:w-[400px] sm:w-[300px] w-[250px] flex-col items-center justify-center p-6 rounded-xl transition-all duration-300
+        <div className='group relative flex 2xl:w-[400px] sm:w-[300px] w-[280px] flex-col items-center justify-center p-6 rounded-xl transition-all duration-300
            bg-gray-700 border border-gray-200 shadow-sm hover:shadow-lg hover:border-blue-500 hover:bg-blue-50
              h-full min-h-[180px] cursor-pointer'
              onClick={()=>{

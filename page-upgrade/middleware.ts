@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
         if(request.method == 'PATCH' || request.method == 'DELETE'){
          const session = await getSession();
          // @ts-ignore
-            if(session.payload.rol!='admin' || session.payload.rol!='presidente'){
+            if(session.payload.rol!='admin' && session.payload.rol!='presidente'){
                 return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
             }
         }
