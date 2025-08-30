@@ -607,6 +607,13 @@ export default function Dashboard() {
                     valueFormatter: (date) => format(date, 'MMM',{ locale: es })
                         .replace(/(\b\w)/g, (match) => match.toUpperCase())
                   }]}
+                  slotProps={{
+                    legend: {
+                      sx: {
+                        justifyContent: 'space-evenly',
+                      },
+                    },
+                  }}
                   layout="horizontal"
                   series={serieDist}
                   className=" min-w-full min-h-[300px] max-h-[300px]"/>
