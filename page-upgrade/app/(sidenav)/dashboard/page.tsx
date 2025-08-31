@@ -176,7 +176,7 @@ export default function Dashboard() {
   }
 
   async function fetchDataMeta() {
-    const response = await fetch(`/api/meta`, {
+    const response = await fetch(`/api/meta?top=1`, {
       method: "GET",
       headers: {"Content-Type": "application/json"},
     });

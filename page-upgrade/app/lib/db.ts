@@ -133,6 +133,13 @@ VALUES (${ced},'${firstName}','${secondFirstName}','${lastName}','${secondLastNa
         return rows;
 }
 
+export async function guardarMeta(meta:number,tipo:string) {
+    const query = `INSERT INTO meta (meta, tipo) 
+VALUES (${meta},'${tipo}')`;
+    const [rows] = await pool.execute(query);
+    return rows;
+}
+
 
 export async function guardarVentaDistributor(ced:number,cantidad:number,peso:number) {
         const dist = await getDistributor(ced);
@@ -313,7 +320,19 @@ export async function getDataGoalPerMonth() {
     try{
         const query = `SELECT SUM(cantidad) as venta, meta FROM registrocompleto, meta
                        WHERE tipodemovimiento='Venta' AND MONTH(fecha_correcta)=MONTH(NOW())
-                       AND meta_id=(SELECT max(meta_id) from meta) GROUP BY meta`;
+                       AND meta_id=(SELECT max(meta_id) from meta where tipo='Venta') GROUP BY meta`;
+        const [rows,fields] = await pool.execute(query);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+
+export async function getAllGoals() {
+    try{
+        const query = `SELECT * FROM  meta
+                       order by meta_id desc`;
         const [rows,fields] = await pool.execute(query);
         return rows;
     }

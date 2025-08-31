@@ -3,20 +3,18 @@ import { useState } from 'react';
 import {
     Bars3Icon,
     XMarkIcon,
-    HomeIcon,
-    CogIcon,
     DocumentTextIcon,
-    ArrowRightEndOnRectangleIcon, BuildingStorefrontIcon, TruckIcon
+    ArrowRightEndOnRectangleIcon, BuildingStorefrontIcon, TruckIcon, ChartBarIcon, TrophyIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import {redirect, usePathname} from 'next/navigation';
 
 const navItems = [
-    { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
+    { name: 'Dashboard', href: '/dashboard', icon: ChartBarIcon },
     { name: 'Manejo de Inventario', href: '/manejo_de_inventario', icon: BuildingStorefrontIcon },
     { name: 'Manejo de Registros', href: '/registros', icon: DocumentTextIcon },
     { name: 'Distribuidores', href: '/distribuidores', icon: TruckIcon },
-    { name: 'Settings', href: '/settings', icon: CogIcon }
+    { name: 'Metas', href: '/metas', icon: TrophyIcon }
 ];
 
 export default function SideNav() {
