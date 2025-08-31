@@ -86,6 +86,7 @@ export default function Dashboard() {
   const [showTooltip, setShowTooltip] = React.useState(true);
   const [monthPicker, setMonthPicker] = useState<Date>(new Date(Date.now()));
   const [selectionDist,setSelectionDist] = useState<string>('todos')
+  const [selectionDistWeight,setSelectionDistWeight] = useState<string>('ambos')
 
   const handleHighlightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setShowHighlight(event.target.checked);
@@ -190,7 +191,8 @@ export default function Dashboard() {
   }
 
   async function fetchDistData() {
-    const response = await fetch(`/api/distribuidor?dist=1&mes=${format(monthPicker,'yyyy-MM-dd')}&modo=${selectionDist}`, {
+    const response = await fetch(`/api/distribuidor?dist=1&mes=${format(monthPicker,'yyyy-MM-dd')}
+    &modo=${selectionDist}&peso=${selectionDistWeight}`, {
       method: "GET",
       headers: {"Content-Type": "application/json"},
     });
@@ -257,6 +259,15 @@ export default function Dashboard() {
         }
     };
 
+    const handleSelectDistWeight = (
+        event: React.MouseEvent<HTMLElement>,
+        newSelection: string | null,
+    ) => {
+        if (newSelection !== null) {
+            setSelectionDistWeight(newSelection);
+        }
+    };
+
   function forceExpiredLogOut(res: Response) {
    if (res.status === 401) {
      redirect('/');
@@ -282,7 +293,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         fetchDistData();
-    }, [monthPicker,selectionDist]);
+    }, [monthPicker,selectionDist,selectionDistWeight]);
 
   useEffect(() => {
     if(dataMeta && dataMeta.venta>=dataMeta.meta){
@@ -357,6 +368,9 @@ export default function Dashboard() {
                 3Kg
               </Button>
               <BarChart
+                  yAxis={[{
+                      valueFormatter:(number:number) => number>=1000 ? `${Math.floor(number)/1000}K` : `${number}`,
+                  }]}
                   xAxis={[{
                     data: dataTime,
                     scaleType: 'band',
@@ -589,15 +603,15 @@ export default function Dashboard() {
                   Ventas por Distribuidor Particular
                 </a>
               </div>
-
-
-
               <BarChart
                   yAxis={[{
                     data: [monthPicker],
                     scaleType: 'band',
                     valueFormatter: (date) => format(date, 'MMM',{ locale: es })
                         .replace(/(\b\w)/g, (match) => match.toUpperCase())
+                  }]}
+                  xAxis={[{
+                      valueFormatter:(number:number) => number>=1000 ? `${Math.floor(number)/1000}K` : `${number}`,
                   }]}
                   slotProps={{
                     legend: {
@@ -609,7 +623,7 @@ export default function Dashboard() {
                   layout="horizontal"
                   series={serieDist}
                   className=" min-w-full min-h-[300px] max-h-[300px]"/>
-              <div className="flex px-3 flex-row items-center justify-evenly gap-2 mb-5">
+              <div className="flex px-3 flex-row items-center justify-evenly gap-2 mb-2">
                 <LocalizationProvider adapterLocale={es} localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDateFns}>
                     <DatePicker label={'Mes'} value={monthPicker} views={['month','year']} onChange={(e) => {e && setMonthPicker(e)}} />
                 </LocalizationProvider>
@@ -634,6 +648,29 @@ export default function Dashboard() {
                       <ToggleButton value="particulares">Particulares</ToggleButton>
                   </ToggleButtonGroup>
               </div>
+                <ToggleButtonGroup
+                    color="primary"
+                    sx={{[`& .${toggleButtonGroupClasses.selected}`]:{
+                            borderColor: "deepskyblue",
+                            color:'black',
+                            fontSize:{xs: "10px", lg:"12px"},
+                            borderWidth:"2px",
+                        },[`& .${toggleButtonGroupClasses.grouped}`]:{
+                            color:'black',
+                            fontSize:{xs: "10px", lg:"12px"},
+                            borderWidth:"2px",
+                        },
+                        justifyContent:'center',
+                    marginBottom:'10px'}}
+                    exclusive
+                    aria-label="Platform"
+                    value={selectionDistWeight}
+                    onChange={handleSelectDistWeight}
+                >
+                    <ToggleButton value="ambos">Ambos</ToggleButton>
+                    <ToggleButton value="3kg">3kg</ToggleButton>
+                    <ToggleButton value="6kg">6kg</ToggleButton>
+                </ToggleButtonGroup>
             </div>
 
         ) : !error && (
@@ -711,8 +748,34 @@ export default function Dashboard() {
                   Meta de ventas mensual
                 </a>
               </div>
-              <Gauge value={dataMeta.venta} valueMax={dataMeta.meta} height={329} text={({ value, valueMax }) => `${value} / ${valueMax}`}
-                     className={'text-xl'}/>
+                <BarChart
+                    xAxis={[{
+                        data: [new Date()],
+                        scaleType: 'band',
+                        valueFormatter: (date) => format(date, 'MMM',{ locale: es })
+                            .replace(/(\b\w)/g, (match) => match.toUpperCase())
+                    }]}
+                    yAxis={[{
+                        valueFormatter:(number:number) => number>=1000 ? `${Math.floor(number)/1000}K` : `${number}`,
+                    }]}
+                    slotProps={{
+                        legend: {
+                            sx: {
+                                justifyContent: 'space-evenly',
+                            },
+                        },
+                    }}
+                    series={[{
+                        data: [dataMeta.meta],
+                        label: 'Meta',
+                        color:'#A230FF'
+                    },
+                        {
+                            data: [dataMeta.venta],
+                            label: 'Ventas',
+                            color: '#d32f2f',
+                        }]}
+                    className=" min-w-full "/>
               <div className="flex px-3 flex-row items-start justify-center gap-2 mb-5">
                 <LocalizationProvider adapterLocale={es} localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDateFns}>
 

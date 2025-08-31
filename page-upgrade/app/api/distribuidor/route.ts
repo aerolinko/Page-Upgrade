@@ -1,12 +1,18 @@
 import {NextRequest, NextResponse} from "next/server";
-import {getDistributorsData, guardarDistribuidor} from "@/app/lib/db";
+import {getDistributorsData, getDistributorsDataByWeight, guardarDistribuidor} from "@/app/lib/db";
 
 export async function GET(request:NextRequest){
     const dist = request.nextUrl.searchParams.get('dist');
     const mes = request.nextUrl.searchParams.get('mes');
     const modo = request.nextUrl.searchParams.get('modo');
-    if (dist && mes && modo) {
-        const data = await getDistributorsData(mes,modo);
+    const peso = request.nextUrl.searchParams.get('peso');
+    if (dist && peso && mes && modo) {
+        let data:string;
+        if(peso=='ambos'){
+            data = await getDistributorsData(mes,modo);
+        }else{
+            data = await getDistributorsDataByWeight(mes,modo,peso);
+        }
         if (data) {
             return NextResponse.json({ status: 200, data });
         }
