@@ -339,14 +339,14 @@ export default function Roles() {
                                             <button
                                                 onClick={()=>{handleConfirmEdit()}}
                                                 className="inline-flex items-center p-2 rounded-full text-green-600 hover:text-green-900 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200"
-                                                aria-label={`Editar ${role.peso}`}
+
                                             >
                                                 <CheckIcon className="h-6 w-6" />
                                             </button>
                                             <button
                                                 onClick={()=>{handleCancelEdit()}}
                                                 className="inline-flex items-center p-2 rounded-full text-red-600 hover:text-red-900 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
-                                                aria-label={`Eliminar ${role.hora}`}
+
                                             >
                                                 <XMarkIcon className="h-6 w-6" />
                                             </button>

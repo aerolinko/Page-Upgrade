@@ -201,10 +201,33 @@ export async function borrarMovimiento(id:number) {
     }
 }
 
+export async function borrarDistribuidor(id:number) {
+    try{
+        const query = `DELETE from distribuidor where distribuidor_id = (${id})`;
+        const [rows,fields] = await pool.execute(query);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+
 export async function editarMovimiento(id:number,cantidad:number,tipodemovimiento:string,peso:string) {
     try{
         const query = `UPDATE registrocompleto set cantidad=(${cantidad}), tipodemovimiento=('${tipodemovimiento}'), peso=('${peso}')
                         where registro_id='${id}'`;
+        const [rows,fields] = await pool.execute(query);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
+
+export async function editarDistribuidor(id:number,nombre:string,apellido:string,estado:string) {
+    try{
+        const query = `UPDATE distribuidor set primer_nombre=('${nombre}'), primer_apellido=('${apellido}'), activo=('${estado}')
+                        where distribuidor_id='${id}'`;
         const [rows,fields] = await pool.execute(query);
         return rows;
     }
@@ -275,9 +298,16 @@ export async function getDistributorsDataByWeight(fecha:string,modo:string, peso
     }
 }
 
-
-
-
+export async function getAllDistData() {
+    try{
+        const query = `SELECT * FROM distribuidor`;
+        const [rows] = await pool.execute(query);
+        return rows;
+    }
+    catch (err) {
+        console.error('Error executing query:', err);
+    }
+}
 
 export async function getDataGoalPerMonth() {
     try{
