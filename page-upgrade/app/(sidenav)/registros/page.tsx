@@ -183,7 +183,7 @@ export default function Roles() {
 
 
     return (
-        <div className='justify-center flex flex-row items-center mt-15 content-center'>
+        <div className="flex flex-col items-center justify-center md:mt-0 mt-10 min-h-full">
             <div className="w-full max-w-4xl bg-gray-700 p-6 sm:p-8  rounded-2xl shadow-xl border-2 transform transition-all duration-300">
                 <h1 className="text-3xl font-bold text-white mb-6 text-center">Manejo de registros</h1>
 

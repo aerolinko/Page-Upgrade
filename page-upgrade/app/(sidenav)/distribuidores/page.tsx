@@ -234,7 +234,7 @@ export default function LoginPage() {
 
     return (
 
-        <div className="flex flex-col items-center justify-center mt-15 min-h-full">
+        <div className="flex flex-col items-center justify-center md:mt-0 mt-10 min-h-full">
             {createSelected ? (
             <div className="bg-gray-700 p-10 sm:p-12 rounded-2xl shadow-xl border-2 w-dvw max-w-fit transform transition-all duration-300 ">
                 <h1 className="text-2xl font-bold text-white mb-8">Registrar Distribuidor</h1>
