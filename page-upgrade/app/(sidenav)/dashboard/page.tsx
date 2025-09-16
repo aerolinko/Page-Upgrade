@@ -515,7 +515,7 @@ export default function Dashboard() {
             </a>
           </div>
           <Gauge
-              className={'w-full'}
+            className={'w-full'}
             value={stock}
             cy='63%'
             valueMax={stockMax}
