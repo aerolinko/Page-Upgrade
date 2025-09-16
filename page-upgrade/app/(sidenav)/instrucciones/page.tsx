@@ -66,7 +66,7 @@ export default function InstruccionesPage() {
                         height={280}
                         src='/dashboard_1.png'
                         alt="Gráfica producción vs ventas"
-                        className=" mb-8 rounded-lg shadow-md border-3 border-blue-700"
+                        className=" mb-8 rounded-lg shadow-md border-3 border-gray-300"
                     ></Box>
                     <Box
                         component={'img'}
@@ -74,7 +74,7 @@ export default function InstruccionesPage() {
                         height={280}
                         src='/dashboard_2.png'
                         alt="Gráfica producción vs ventas"
-                        className="rounded-lg shadow-md border-3 border-blue-700"
+                        className="rounded-lg shadow-md border-3 border-gray-300"
                     />
                 </div>
 
@@ -86,7 +86,7 @@ export default function InstruccionesPage() {
                     height={290}
                     src='/dashboard_3.png'
                     alt="Producción vs ventas"
-                    className="rounded-lg shadow-md border-3 border-blue-700 mx-auto my-4"
+                    className="rounded-lg shadow-md border-3 border-gray-300 mx-auto my-4"
                 />
 
                 <h2 className="text-2xl font-semibold text-gray-400 mt-8 mb-3">Historial de movimientos</h2>
@@ -98,7 +98,7 @@ export default function InstruccionesPage() {
                     height={290}
                     src='/dashboard_4.png'
                     alt="Historial de movimientos"
-                    className="rounded-lg shadow-md border-3  border-blue-700 mx-auto my-4"
+                    className="rounded-lg shadow-md border-3  border-gray-300 mx-auto my-4"
                 />
 
                 <h2 className="text-2xl font-semibold text-gray-400 mt-8 mb-3">Inventario en stock y composición de inventario</h2>
@@ -109,7 +109,7 @@ export default function InstruccionesPage() {
                     sx={{height:{xs:120,lg:200},width:{xs:500,lg:590}}}
                     src='/dashboard_5.png'
                     alt="Gráfica de inventario en stock y composición de inventario"
-                    className="rounded-lg shadow-md border-3 border-blue-700 mx-auto my-4"
+                    className="rounded-lg shadow-md border-3 border-gray-300 mx-auto my-4"
                 />
 
                 <h2 className="text-2xl font-semibold text-gray-400 mt-8 mb-3">Ventas por distribuidor</h2>
@@ -121,7 +121,7 @@ export default function InstruccionesPage() {
                     height={290}
                     src='/dashboard_6.png'
                     alt="Gráfica producción por distribuidor"
-                    className="rounded-lg shadow-md border-3  border-blue-700 mx-auto my-4"
+                    className="rounded-lg shadow-md border-3  border-gray-300 mx-auto my-4"
                 />
 
                 <h2 className="text-2xl font-semibold text-gray-400 mt-8 mb-3">Metas mensuales</h2>
@@ -133,7 +133,7 @@ export default function InstruccionesPage() {
                     height={290}
                     src='/dashboard_7.png'
                     alt="Gráfica de metas mensuales"
-                    className="rounded-lg shadow-md border-3  border-blue-700 mx-auto my-4"
+                    className="rounded-lg shadow-md border-3  border-gray-300 mx-auto my-4"
                 />
             </div>
             )}
@@ -154,7 +154,7 @@ export default function InstruccionesPage() {
                     height={100}
                     src='/manejoinv_1.png'
                     alt="Manejo de inventario"
-                    className="rounded-lg shadow-md border-3  border-blue-700 mx-auto my-4"
+                    className="rounded-lg shadow-md border-3  border-gray-300 mx-auto my-4"
                 />
 
                 <h2 className="text-2xl font-semibold text-gray-400 mt-8 mb-3">Manejo de la producción</h2>
@@ -166,7 +166,7 @@ export default function InstruccionesPage() {
                     height={150}
                     src='/manejoinv_2.png'
                     alt="Formulario de producción"
-                    className="rounded-lg shadow-md border-3  border-blue-700 mx-auto my-4"
+                    className="rounded-lg shadow-md border-3  border-gray-300 mx-auto my-4"
                 />
 
                 <h2 className="text-2xl font-semibold text-gray-400 mt-8 mb-3">Manejo de las ventas</h2>
@@ -178,7 +178,7 @@ export default function InstruccionesPage() {
                     height={160}
                     src='/manejoinv_3.png'
                     alt="Formulario de ventas"
-                    className="rounded-lg shadow-md border-3 border-blue-700 mx-auto my-4"
+                    className="rounded-lg shadow-md border-3 border-gray-300 mx-auto my-4"
                 />
 
                 <h2 className="text-2xl font-semibold text-gray-400 mt-8 mb-3">Casos especiales</h2>
@@ -190,7 +190,7 @@ export default function InstruccionesPage() {
                     height={160}
                     src='/manejoinv_4.png'
                     alt="Formulario de casos especiales"
-                    className="rounded-lg shadow-md border-3  border-blue-700 mx-auto my-4"
+                    className="rounded-lg shadow-md border-3  border-gray-300 mx-auto my-4"
                 />
             </div>
             )}
@@ -207,7 +207,7 @@ export default function InstruccionesPage() {
                     height={200}
                     src='/manejore_1.png'
                     alt="Tabla de registro de movimientos"
-                    className="rounded-lg shadow-md border-3 border-blue-700 mx-auto my-4"
+                    className="rounded-lg shadow-md border-3 border-gray-300 mx-auto my-4"
                 />
             </div>
             )}
@@ -224,7 +224,7 @@ export default function InstruccionesPage() {
                     height={240}
                     src='/distribuidores_1.png'
                     alt="Tabla de distribuidores"
-                    className="rounded-lg shadow-md border-3  border-blue-700 mx-auto my-4"
+                    className="rounded-lg shadow-md border-3  border-gray-300 mx-auto my-4"
                 />
 
                 <p className="text-gray-50 mt-6 mb-4 leading-relaxed indent-8">A su vez, se podrá agregar un distribuidor nuevo a los registros. Para ello, deberá llenar el formulario con los datos correspondientes y darle a registrar.</p>
@@ -235,7 +235,7 @@ export default function InstruccionesPage() {
                     height={200}
                     src='/distribuidores_2.png'
                     alt="Formulario de registro de distribuidores"
-                    className="rounded-lg shadow-md border-3 border-blue-700 mx-auto my-4"
+                    className="rounded-lg shadow-md border-3 border-gray-300 mx-auto my-4"
                 />
             </div>
             )}
@@ -252,7 +252,7 @@ export default function InstruccionesPage() {
                         height={250}
                         src='/metas_1.png'
                         alt="Tabla de metas"
-                        className="mb-8 rounded-lg shadow-md border-3 border-blue-700"
+                        className="mb-8 rounded-lg shadow-md border-3 border-gray-300"
                     />
                     <Box
                         component={'img'}
@@ -260,7 +260,7 @@ export default function InstruccionesPage() {
                         height={250}
                         src='/metas_2.png'
                         alt="Formulario de metas"
-                        className="rounded-lg shadow-lg border-3 border-blue-700"
+                        className="rounded-lg shadow-lg border-3 border-gray-300"
                     />
                 </div>
             </div>
