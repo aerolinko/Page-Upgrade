@@ -22,7 +22,7 @@ export default function InstruccionesPage() {
 
         <main className="flex flex-col bg-white rounded-lg gap-[32px] row-start-2 items-center sm:items-start">
             <ToggleButtonGroup
-                className={'flex justify-center bg-blue-300 mx-auto mt-6'}
+                className={'flex justify-center bg-gray-300 mx-auto sticky top-10 z-10 mt-10'}
                 color="primary"
                 sx={{
                     [`& .${toggleButtonGroupClasses.selected}`]: {
