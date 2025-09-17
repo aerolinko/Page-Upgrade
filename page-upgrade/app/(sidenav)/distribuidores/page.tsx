@@ -84,6 +84,7 @@ export default function LoginPage() {
                 reset();
                 setMensaje('Distribuidor registrado exitosamente.');
                 setTimeout(() =>{setMensaje('')},5000)
+                await fetchAllDistData();
             } else {
                 const res = await response.json();
                 forceExpiredLogOut(response);
@@ -213,6 +214,7 @@ export default function LoginPage() {
         });
         if (response.ok) {
             const res = await response.json();
+            await fetchAllDistData();
         } else {
             setError("Error eliminando los datos del servidor");
             forceExpiredLogOut(response);

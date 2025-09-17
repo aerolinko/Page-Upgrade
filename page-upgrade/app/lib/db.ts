@@ -318,9 +318,12 @@ export async function getAllDistData() {
 
 export async function getDataGoalPerMonth() {
     try{
-        const query = `SELECT SUM(cantidad) as venta, meta FROM registrocompleto, meta
-                       WHERE tipodemovimiento='Venta' AND MONTH(fecha_correcta)=MONTH(NOW())
-                       AND meta_id=(SELECT max(meta_id) from meta where tipo='Venta') GROUP BY meta`;
+        const query = `SELECT SUM(cantidad) as venta, meta
+                       FROM meta LEFT JOIN registrocompleto ON tipodemovimiento = 'Venta'
+                           AND MONTH(fecha_correcta) = MONTH(NOW())
+                           AND YEAR(fecha_correcta) = YEAR(NOW())
+                       WHERE meta_id = (SELECT MAX(meta_id) FROM meta WHERE tipo = 'Venta')
+                       GROUP BY meta`;
         const [rows,fields] = await pool.execute(query);
         return rows;
     }

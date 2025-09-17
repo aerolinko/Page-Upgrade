@@ -182,7 +182,12 @@ export default function Dashboard() {
     });
     if (response.ok) {
       const res = await response.json();
-      setDataMeta(res.data[0]);
+        if(res.data[0].venta){
+            setDataMeta(res.data[0]);
+        }else{
+            setDataMeta({meta:res.data[0].meta,venta:0});
+        }
+
     } else {
       forceExpiredLogOut(response);
       setError("Error obteniendo los datos del servidor");
