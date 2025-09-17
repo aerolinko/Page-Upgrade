@@ -4,10 +4,12 @@ import {
     Bars3Icon,
     XMarkIcon,
     DocumentTextIcon,
-    ArrowRightEndOnRectangleIcon, BuildingStorefrontIcon, TruckIcon, ChartBarIcon, TrophyIcon
+    ArrowRightEndOnRectangleIcon, BuildingStorefrontIcon, TruckIcon, ChartBarIcon, TrophyIcon, PaperClipIcon,
+    ClipboardDocumentIcon, DocumentMagnifyingGlassIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import {redirect, usePathname} from 'next/navigation';
+import {InformationCircleIcon} from "@heroicons/react/24/solid";
 
 const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: ChartBarIcon },
@@ -82,6 +84,18 @@ export default function SideNav() {
                                 </li>
                             ))}
                         </ul>
+                        <Link
+                            href={'/instrucciones'}
+                            className={`flex items-center p-3 mt-5 rounded-lg ${
+                                pathname === '/instrucciones'
+                                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300'
+                                    : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                            }`}
+                            onClick={() => setIsOpen(false)}
+                        >
+                            <InformationCircleIcon className="h-5 w-5 mr-3" />
+                            <span>{'Instrucciones'}</span>
+                        </Link>
                     </nav>
 
                     <div className="mb-15 md:mb-0">

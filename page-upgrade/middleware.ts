@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
     ]
 
     if(PUBLIC_ROUTES.some(url => url===request.nextUrl.pathname )){
-       return NextResponse.next();
+       return NextResponse.next({request});
     }
 
     if(await getSession()) {
