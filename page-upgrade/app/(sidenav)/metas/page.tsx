@@ -55,6 +55,7 @@ export default function LoginPage() {
         if (response.ok) {
             const res = await response.json();
             reset();
+            fetchAllGoalData();
             setMensaje('Meta registrada exitosamente.');
             setTimeout(() =>{setMensaje('')},5000)
         } else {
