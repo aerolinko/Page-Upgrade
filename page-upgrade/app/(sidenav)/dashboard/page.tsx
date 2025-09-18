@@ -104,7 +104,7 @@ export default function Dashboard() {
            return new Intl.DateTimeFormat('en-GB', {
                day: '2-digit',
                month: '2-digit',
-               year: 'numeric',
+               year: '2-digit',
                timeZone: 'America/Puerto_Rico' // GMT-4
            }).format(date).replace(/\//g, '/');
        },
