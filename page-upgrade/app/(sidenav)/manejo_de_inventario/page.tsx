@@ -181,7 +181,7 @@ export default function Dashboard() {
                 <DataTable
                     columns={columns}
                     data={dataPro.filter(item =>
-                        format(item.fecha_correcta, 'dd/MM/yyyy').includes(filterTextPro.toLowerCase().trim()) ||
+                        formatDateGMT4(item.fecha_correcta).includes(filterTextPro.toLowerCase().trim()) ||
                         item.tipodemovimiento.toLowerCase().includes(filterTextPro.toLowerCase().trim()) ||
                         item.cantidad.toString().includes(filterTextPro) || item.hora.toString().trim().includes(filterTextPro.toLowerCase().trim())
                     )}
@@ -286,7 +286,7 @@ export default function Dashboard() {
                     <DataTable
                         columns={columns}
                         data={dataVen.filter(item =>
-                            format(item.fecha_correcta, 'dd/MM/yyyy').includes(filterTextVen.toLowerCase().trim()) ||
+                            formatDateGMT4(item.fecha_correcta).includes(filterTextVen.toLowerCase().trim()) ||
                             item.tipodemovimiento.toLowerCase().includes(filterTextVen.toLowerCase().trim()) ||
                             item.cantidad.toString().includes(filterTextVen) || item.hora.toString().trim().includes(filterTextVen.toLowerCase().trim())
                         )}
@@ -390,7 +390,7 @@ export default function Dashboard() {
                     <DataTable
                         columns={columns}
                         data={dataSpecial.filter(item =>
-                            format(item.fecha_correcta, 'dd/MM/yyyy').includes(filterTextVen.toLowerCase().trim()) ||
+                            formatDateGMT4(item.fecha_correcta).includes(filterTextVen.toLowerCase().trim()) ||
                             item.tipodemovimiento.toLowerCase().includes(filterTextVen.toLowerCase().trim()) ||
                             item.cantidad.toString().includes(filterTextVen) || item.hora.toString().trim().includes(filterTextVen.toLowerCase().trim())
                         )}

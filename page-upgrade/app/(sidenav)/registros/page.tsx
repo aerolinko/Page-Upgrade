@@ -84,7 +84,7 @@ export default function Roles() {
                 role.peso.toLowerCase().includes(lowerCaseFilter) ||
                 role.cantidad.toString().includes(lowerCaseFilter) ||
                 role.hora.toLowerCase().includes(lowerCaseFilter) ||
-                format(role.fecha_correcta,'dd/MM/yyyy').toLowerCase().includes(lowerCaseFilter)
+                formatDateGMT4(role.fecha_correcta).toLowerCase().includes(lowerCaseFilter)
             );
         }
         return currentRoles;

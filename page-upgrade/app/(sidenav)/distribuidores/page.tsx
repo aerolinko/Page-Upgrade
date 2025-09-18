@@ -151,7 +151,7 @@ export default function LoginPage() {
                 role.cedula.toString().includes(lowerCaseFilter) ||
                 role.segundo_nombre?.toLowerCase().includes(lowerCaseFilter) ||
                 role.segundo_apellido?.toLowerCase().includes(lowerCaseFilter) ||
-                format(role.fecha_contrato,'dd/MM/yyyy').toLowerCase().includes(lowerCaseFilter)
+                formatDateGMT4(role.fecha_correcta).toLowerCase().includes(lowerCaseFilter)
             );
         }
         return currentRoles;

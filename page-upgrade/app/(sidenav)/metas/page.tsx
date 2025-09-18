@@ -102,7 +102,7 @@ export default function LoginPage() {
                 role.tipo.toLowerCase().includes(lowerCaseFilter) ||
                 role.meta.toString().includes(lowerCaseFilter) ||
                (role.alcanzada ? 'si'.includes(lowerCaseFilter) : 'no'.includes(lowerCaseFilter)) ||
-                format(role.fecha_creacion,'dd/MM/yyyy').toLowerCase().includes(lowerCaseFilter)
+                formatDateGMT4(role.fecha_creacion).toLowerCase().includes(lowerCaseFilter)
             );
         }
         return currentRoles;

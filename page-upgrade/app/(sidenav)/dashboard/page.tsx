@@ -453,7 +453,7 @@ export default function Dashboard() {
               <DataTable
                   columns={columns}
                   data={data.filter(item =>
-                      format(item.fecha_correcta, 'dd/MM/yyyy').includes(filterText.toLowerCase().trim()) ||
+                      formatDateGMT4(item.fecha_correcta).includes(filterText.toLowerCase().trim()) ||
                       item.tipodemovimiento.toLowerCase().includes(filterText.toLowerCase().trim()) ||
                       item.cantidad.toString().includes(filterText) || item.hora.toString().trim().includes(filterText.toLowerCase().trim())
                   )}
