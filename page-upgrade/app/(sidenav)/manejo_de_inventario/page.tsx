@@ -394,7 +394,7 @@ export default function Dashboard() {
                         highlightOnHover
                         responsive
                         noDataComponent="No hay datos disponibles"
-                        progressPending={!dataSpecial.length}
+                 
                         customStyles={{
                           tableWrapper: {
                             style:{
