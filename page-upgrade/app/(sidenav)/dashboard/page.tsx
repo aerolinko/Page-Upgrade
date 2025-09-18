@@ -99,7 +99,15 @@ export default function Dashboard() {
  const columns = [
    {
      name: 'FECHA',
-     selector: (row: Movimiento) => new Date(row.fecha_correcta).toString(),
+       selector: (row: Movimiento) => {
+           const date = new Date(row.fecha_correcta);
+           return new Intl.DateTimeFormat('en-GB', {
+               day: '2-digit',
+               month: '2-digit',
+               year: 'numeric',
+               timeZone: 'America/Puerto_Rico' // GMT-4
+           }).format(date).replace(/\//g, '/');
+       },
      sortable: true,
      sortFunction: (rowA: Movimiento, rowB: Movimiento) => {
        const dateA = new Date(rowA.fecha_correcta).getTime();
