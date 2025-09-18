@@ -394,7 +394,6 @@ export default function Dashboard() {
                         highlightOnHover
                         responsive
                         noDataComponent="No hay datos disponibles"
-                 
                         customStyles={{
                           tableWrapper: {
                             style:{
