@@ -110,7 +110,15 @@ export default function Dashboard() {
  const columns = [
    {
      name: 'FECHA',
-       selector: (row: Movimiento) => formatDateGMT4(row.fecha_correcta),
+       selector: (row: Movimiento) => {
+           const date = new Date(row.fecha_correcta);
+           return new Intl.DateTimeFormat('en-GB', {
+               day: '2-digit',
+               month: '2-digit',
+               year: 'numeric',
+               timeZone: 'Etc/GMT+4'
+           }).format(date);
+       },
      sortable: true,
      sortFunction: (rowA: Movimiento, rowB: Movimiento) => {
        const dateA = new Date(rowA.fecha_correcta).getTime();
