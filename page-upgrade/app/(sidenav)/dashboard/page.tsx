@@ -34,7 +34,7 @@ export default function Dashboard() {
     venta: number;
   }
   interface Movimiento {
-    fecha_correcta: Date;
+    fecha_correcta: string;
     cantidad: number;
     tipodemovimiento:string;
     peso:string;
