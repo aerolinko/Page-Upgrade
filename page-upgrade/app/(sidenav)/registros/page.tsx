@@ -380,7 +380,7 @@ export default function Roles() {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={5} className="px-6 py-4 text-center text-sm text-black">
+                                <td colSpan={7} className="px-6 py-4 text-center text-sm text-black">
                                     No se encontraron movimientos.
                                 </td>
                             </tr>
