@@ -115,8 +115,7 @@ export default function Dashboard() {
            return new Intl.DateTimeFormat('en-GB', {
                day: '2-digit',
                month: '2-digit',
-               year: 'numeric',
-               timeZone: 'Etc/GMT+4'
+               year: 'numeric'
            }).format(date);
        },
      sortable: true,
