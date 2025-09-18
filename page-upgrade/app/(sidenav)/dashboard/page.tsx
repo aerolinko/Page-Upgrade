@@ -176,6 +176,7 @@ export default function Dashboard() {
     if (response.ok) {
       const res = await response.json();
       setData(res.data);
+      console.log(res.data);
     } else {
       forceExpiredLogOut(response);
       setError("Error obteniendo los datos del servidor");
