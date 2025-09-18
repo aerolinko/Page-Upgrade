@@ -183,7 +183,8 @@ export async function guardarMovimiento(tipodemovimiento:string, cantidad:number
         const formattedTime = new Intl.DateTimeFormat('en-US', {
             hour: '2-digit',
             minute: '2-digit',
-            hour12: true
+            hour12: true,
+            timeZone: 'Etc/GMT+4'
         }).format(date).replace(/\bAM\b/gi, 'a.m.').replace(/\bPM\b/gi, 'p.m.');
         const formattedDate= format(date,'yyyy-MM-dd');
 

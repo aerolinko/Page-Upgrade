@@ -8,7 +8,7 @@ import {
   PieChart, SparkLineChart
 } from "@mui/x-charts";
 import React, {useState, useEffect} from "react";
-import {format, parseISO} from "date-fns";
+import {format} from "date-fns";
 import {es} from "date-fns/locale/es";
 import DataTable from "react-data-table-component";
 import {redirect} from "next/navigation";
@@ -34,7 +34,7 @@ export default function Dashboard() {
     venta: number;
   }
   interface Movimiento {
-    fecha_correcta: string;
+    fecha_correcta: Date;
     cantidad: number;
     tipodemovimiento:string;
     peso:string;
@@ -99,7 +99,7 @@ export default function Dashboard() {
  const columns = [
    {
      name: 'FECHA',
-     selector: (row: Movimiento) => format(parseISO(row.fecha_correcta), 'dd/MM/yyyy'),
+     selector: (row: Movimiento) => row.fecha_correcta,
      sortable: true,
      sortFunction: (rowA: Movimiento, rowB: Movimiento) => {
        const dateA = new Date(rowA.fecha_correcta).getTime();
