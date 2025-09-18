@@ -105,7 +105,7 @@ export default function Dashboard() {
                day: '2-digit',
                month: '2-digit',
                year: '2-digit',
-               timeZone: 'America/Puerto_Rico' // GMT-4
+               timeZone: 'Etc/GMT+4' // GMT-4
            }).format(date).replace(/\//g, '/');
        },
      sortable: true,
