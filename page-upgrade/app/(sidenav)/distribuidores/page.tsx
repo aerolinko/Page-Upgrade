@@ -43,12 +43,23 @@ export default function LoginPage() {
         primer_apellido:string;
         segundo_nombre?:string;
         segundo_apellido?:string;
-        fecha_contrato:Date;
+        fecha_contrato:string;
         distribuidor_id:number;
         cedula:number;
         telefono?:string;
         activo:string;
     }
+
+    const formatDateGMT4 = (dateString: string): string => {
+        const date = new Date(dateString);
+        const adjustedDate = new Date(date.getTime() + (4 * 60 * 60 * 1000));
+
+        const day = adjustedDate.getUTCDate().toString().padStart(2, '0');
+        const month = (adjustedDate.getUTCMonth() + 1).toString().padStart(2, '0');
+        const year = adjustedDate.getUTCFullYear();
+
+        return `${day}/${month}/${year}`;
+    };
 
     function forceExpiredLogOut(res: Response) {
         if (res.status === 401) {
@@ -463,7 +474,7 @@ export default function LoginPage() {
                                         {role.cedula}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
-                                        {format(role.fecha_contrato,'dd/MM/yyyy')}
+                                        {formatDateGMT4(role.fecha_contrato)}
                                     </td>
                                     <td className="px-6 py-4 whitespace-normal text-sm text-black">
                                         {role.telefono}

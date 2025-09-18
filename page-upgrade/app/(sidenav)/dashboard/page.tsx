@@ -110,14 +110,7 @@ export default function Dashboard() {
  const columns = [
    {
      name: 'FECHA',
-       selector: (row: Movimiento) => {
-           const date = new Date(row.fecha_correcta);
-           return new Intl.DateTimeFormat('en-US', { // Venezuelan Spanish locale
-               day: '2-digit',
-               month: '2-digit',
-               year: 'numeric',
-           }).format(date);
-       },
+       selector: (row: Movimiento) => formatDateGMT4(row.fecha_correcta),
      sortable: true,
      sortFunction: (rowA: Movimiento, rowB: Movimiento) => {
        const dateA = new Date(rowA.fecha_correcta).getTime();

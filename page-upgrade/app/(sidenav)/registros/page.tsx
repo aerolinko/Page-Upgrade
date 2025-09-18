@@ -26,7 +26,7 @@ export default function Roles() {
     const [rol, setRol] = useState<string | null>(null);
 
     interface Movimiento {
-        fecha_correcta: Date;
+        fecha_correcta: string;
         cantidad: number;
         tipodemovimiento:string;
         peso:string;
@@ -34,6 +34,17 @@ export default function Roles() {
         registro_id:number;
         cedula:number;
     }
+
+    const formatDateGMT4 = (dateString: string): string => {
+        const date = new Date(dateString);
+        const adjustedDate = new Date(date.getTime() + (4 * 60 * 60 * 1000));
+
+        const day = adjustedDate.getUTCDate().toString().padStart(2, '0');
+        const month = (adjustedDate.getUTCMonth() + 1).toString().padStart(2, '0');
+        const year = adjustedDate.getUTCFullYear();
+
+        return `${day}/${month}/${year}`;
+    };
 
     const [data, setData] = useState<Movimiento[]>([])
 
@@ -276,7 +287,7 @@ export default function Roles() {
                             paginatedRoles.map((role) => (
                                 <tr key={role.registro_id} className="hover:bg-gray-500 transition-colors">
                                     <td className="px-6 py-4 whitespace-normal text-sm text-black">
-                                        {format(role.fecha_correcta,'dd/MM/yyyy')}
+                                        {formatDateGMT4(role.fecha_correcta)}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
                                         {editingId === role.registro_id ? (

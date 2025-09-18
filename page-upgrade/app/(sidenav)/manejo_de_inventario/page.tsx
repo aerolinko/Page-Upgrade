@@ -14,7 +14,7 @@ import Special from "@/app/ui/special";
 export default function Dashboard() {
 
   interface Movimiento {
-    fecha_correcta: Date;
+    fecha_correcta: string;
     cantidad: number;
     tipodemovimiento:string;
     peso:string;
@@ -36,10 +36,21 @@ export default function Dashboard() {
   const [stateVen, setStateVen] = useState<boolean>(true)
   const [stateSpecial, setStateSpecial] = useState<boolean>(true)
 
+    const formatDateGMT4 = (dateString: string): string => {
+        const date = new Date(dateString);
+        const adjustedDate = new Date(date.getTime() + (4 * 60 * 60 * 1000));
+
+        const day = adjustedDate.getUTCDate().toString().padStart(2, '0');
+        const month = (adjustedDate.getUTCMonth() + 1).toString().padStart(2, '0');
+        const year = adjustedDate.getUTCFullYear();
+
+        return `${day}/${month}/${year}`;
+    };
+
   const columns = [
     {
       name: 'FECHA',
-      selector: (row: Movimiento) => format(new Date(row.fecha_correcta), 'dd/MM/yyyy'),
+        selector: (row: Movimiento) => formatDateGMT4(row.fecha_correcta),
       sortable: true,
       sortFunction: (rowA: Movimiento, rowB: Movimiento) => {
         const dateA = new Date(rowA.fecha_correcta).getTime();
