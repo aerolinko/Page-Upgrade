@@ -112,10 +112,11 @@ export default function Dashboard() {
      name: 'FECHA',
        selector: (row: Movimiento) => {
            const date = new Date(row.fecha_correcta);
-           return new Intl.DateTimeFormat('en-GB', {
+           return new Intl.DateTimeFormat('es-VE', { // Venezuelan Spanish locale
                day: '2-digit',
                month: '2-digit',
-               year: 'numeric'
+               year: 'numeric',
+               timeZone: 'America/Caracas'
            }).format(date);
        },
      sortable: true,
