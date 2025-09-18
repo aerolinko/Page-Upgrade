@@ -96,18 +96,21 @@ export default function Dashboard() {
     setShowTooltip(event.target.checked);
   };
 
+    const formatDateGMT4 = (dateString: string): string => {
+        const date = new Date(dateString);
+        const adjustedDate = new Date(date.getTime() + (4 * 60 * 60 * 1000));
+
+        const day = adjustedDate.getUTCDate().toString().padStart(2, '0');
+        const month = (adjustedDate.getUTCMonth() + 1).toString().padStart(2, '0');
+        const year = adjustedDate.getUTCFullYear();
+
+        return `${day}/${month}/${year}`;
+    };
+
  const columns = [
    {
      name: 'FECHA',
-       selector: (row: Movimiento) => {
-           const date = new Date(row.fecha_correcta);
-           return new Intl.DateTimeFormat('en-GB', {
-               day: '2-digit',
-               month: '2-digit',
-               year: 'numeric',
-               timeZone: 'America/Puerto_Rico' // GMT-4
-           }).format(date).replace(/\//g, '/');
-       },
+       selector: (row: Movimiento) => formatDateGMT4(row.fecha_correcta),
      sortable: true,
      sortFunction: (rowA: Movimiento, rowB: Movimiento) => {
        const dateA = new Date(rowA.fecha_correcta).getTime();
@@ -176,7 +179,6 @@ export default function Dashboard() {
     if (response.ok) {
       const res = await response.json();
       setData(res.data);
-      console.log(res.data);
     } else {
       forceExpiredLogOut(response);
       setError("Error obteniendo los datos del servidor");
