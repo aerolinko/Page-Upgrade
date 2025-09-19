@@ -390,8 +390,12 @@ export default function Dashboard() {
                   xAxis={[{
                     data: dataTime,
                     scaleType: 'band',
-                    valueFormatter: (date) => format(date, 'MMM dd',{ locale: es })
-                        .replace(/(\b\w)/g, (match) => match.toUpperCase())
+                      valueFormatter: (dateString) => {
+                          const date = new Date(dateString);
+                          const adjustedDate = new Date(date.getTime() + (4 * 60 * 60 * 1000));
+                          return format(adjustedDate, 'MMM dd', { locale: es })
+                              .replace(/(\b\w)/g, (match) => match.toUpperCase());
+                      }
                   }]}
                   series={[{
                     data: dataAmountPro,
