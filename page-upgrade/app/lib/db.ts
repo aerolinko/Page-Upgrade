@@ -33,7 +33,7 @@ export async function getData(inicio: string, fin: string) {
                        FROM registrocompleto
                        WHERE tipodemovimiento IN ('Produccion', 'Venta') and fecha_correcta between ? and ?
                        GROUP BY fecha_correcta
-                       ORDER BY fecha_correcta desc`;
+                       ORDER BY fecha_correcta`;
         const [rows] = await pool.execute(query, [fin, inicio]);
         return rows;
     }
@@ -49,7 +49,7 @@ export async function getOnly3kg(inicio: string, fin: string) {
                        FROM registrocompleto
                        WHERE tipodemovimiento IN ('Produccion', 'Venta') and fecha_correcta between ? and ?
                        GROUP BY fecha_correcta
-                       ORDER BY fecha_correcta desc) as T where produccion is not null or venta is not null order by fecha_correcta desc`;
+                       ORDER BY fecha_correcta) as T where produccion is not null or venta is not null order by fecha_correcta`;
         const [rows] = await pool.execute(query, [fin, inicio]);
         return rows;
     }
@@ -65,7 +65,7 @@ export async function getOnly6kg(inicio: string, fin: string) {
                                       FROM registrocompleto
                                       WHERE tipodemovimiento IN ('Produccion', 'Venta') and fecha_correcta between ? and ?
                                       GROUP BY fecha_correcta
-                                      ORDER BY fecha_correcta desc) as T where produccion is not null or venta is not null order by fecha_correcta desc`;
+                                      ORDER BY fecha_correcta) as T where produccion is not null or venta is not null order by fecha_correcta`;
         const [rows] = await pool.execute(query, [fin, inicio]);
         return rows;
     }
