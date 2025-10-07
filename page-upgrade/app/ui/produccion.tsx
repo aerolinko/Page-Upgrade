@@ -18,10 +18,12 @@ export default function Produccion({statePro, setStatePro}:{
     const [peso, setPeso] = useState<string>('');
     const [isSelected, setIsSelected] = useState<boolean>(false);
     const [isZero, setIsZero] = useState<boolean>(true);
+    const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
+        setIsButtonDisabled(true);
         const response = await fetch(`/api/data?prod=1`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -32,10 +34,12 @@ export default function Produccion({statePro, setStatePro}:{
             setMensaje('Se ha guardado exitosamente');
             setTimeout(() => setMensaje(''), 2000);
             reset();
+            setIsButtonDisabled(false);
             statePro ? setStatePro(false) : setStatePro(true);
         } else {
             forceExpiredLogOut(response);
             setError("Error obteniendo los datos del servidor");
+            setIsButtonDisabled(false);
         }
 
     }
@@ -127,7 +131,7 @@ export default function Produccion({statePro, setStatePro}:{
                     </div>
                 )
                 }
-                <Button className="mt-4 w-full">
+                <Button className="mt-4 w-full disabled:bg-gray-400" disabled={isButtonDisabled}>
                     Crear <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
                 </Button>
             </form>

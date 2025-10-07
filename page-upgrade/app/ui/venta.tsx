@@ -27,13 +27,13 @@ export default function Venta({stateVen, setStateVen}:{
     const [isSelected, setIsSelected] = useState<boolean>(false);
     const [isZero, setIsZero] = useState<boolean>(true);
     const [isDistZero, setIsDistZero] = useState<boolean>(true);
-
+    const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         if((parseInt(cantidad) <= stockComponents.peso_6kg && peso=='6kg') ||
             (parseInt(cantidad) <= stockComponents.peso_3kg && peso=='3kg')) {
-
+            setIsButtonDisabled(true);
         const response = await fetch(`/api/data?venta=1`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -45,10 +45,12 @@ export default function Venta({stateVen, setStateVen}:{
             setMensaje('Se ha guardado exitosamente');
             setTimeout(() => setMensaje(''), 2000);
             reset();
+            setIsButtonDisabled(false);
             stateVen ? setStateVen(false) : setStateVen(true);
         } else {
             const res = await response.json();
             forceExpiredLogOut(response);
+            setIsButtonDisabled(false);
             setError(res.error);
             }
         }
@@ -195,7 +197,7 @@ export default function Venta({stateVen, setStateVen}:{
                         </div>
                     )
                     }
-                    <Button className={`w-full ${peso ? 'mt-0' : 'mt-4'}`}>
+                    <Button className={`w-full disabled:bg-gray-400 ${peso ? 'mt-0' : 'mt-4'}`} disabled={isButtonDisabled}>
                         Crear <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
                     </Button>
                 </form>
