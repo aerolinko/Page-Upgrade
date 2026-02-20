@@ -795,7 +795,7 @@ export default function Dashboard() {
                             label: 'Ventas',
                             color: '#d32f2f',
                         }]}
-                    className=" min-w-full min-h-[300px] "/>
+                    className=" min-w-full min-h-[300px] max-h-[300px]"/>
               <div className="flex px-3 flex-row items-start justify-center gap-2 mb-5">
                 <LocalizationProvider adapterLocale={es} localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDateFns}>
 
