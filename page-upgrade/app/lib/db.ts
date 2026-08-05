@@ -88,7 +88,7 @@ export async function getAllData() {
     }
 }
 
-export async function getMonthSalesByWeek(targetDate) {
+export async function getMonthSalesByWeek(targetDate: Date | string = new Date()) {
     try {
         const formattedDate = targetDate instanceof Date
             ? targetDate.toISOString().split('T')[0]
