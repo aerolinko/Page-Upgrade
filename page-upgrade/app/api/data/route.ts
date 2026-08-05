@@ -93,10 +93,12 @@ export async function GET(request: NextRequest) {
         const MonthWeekly = request.nextUrl.searchParams.get('MonthWeekly');
         if (MonthWeekly) {
             const mes = request.nextUrl.searchParams.get('mes');
+if(mes){
             const data = await getMonthSalesByWeek(mes);
             if (data) {
                 return NextResponse.json({ status: 200, data });
             }
+}
         }
 
         return NextResponse.json(
