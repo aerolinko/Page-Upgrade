@@ -10,7 +10,7 @@ import {
     borrarMovimiento,
     editarMovimiento,
     getSpecialData,
-    guardarVentaDistributor, getDistributorsData
+    guardarVentaDistributor, getDistributorsData, getMonthSalesByWeek
 } from "@/app/lib/db";
 import {NextRequest, NextResponse} from "next/server";
 
@@ -85,6 +85,15 @@ export async function GET(request: NextRequest) {
         const stockComponent = request.nextUrl.searchParams.get('stockComponent');
         if (stockComponent) {
             const data = await getStockComponents();
+            if (data) {
+                return NextResponse.json({ status: 200, data });
+            }
+        }
+
+        const MonthWeekly = request.nextUrl.searchParams.get('MonthWeekly');
+        if (MonthWeekly) {
+            const mes = request.nextUrl.searchParams.get('mes');
+            const data = await getMonthSalesByWeek(mes);
             if (data) {
                 return NextResponse.json({ status: 200, data });
             }

@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from 'next/server';
 import { updateSession, getSession } from '@/app/lib/auth';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
 
     const PUBLIC_ROUTES=[
         '/api/login'

@@ -85,8 +85,12 @@ export default function Dashboard() {
   const [showHighlight, setShowHighlight] = React.useState(true);
   const [showTooltip, setShowTooltip] = React.useState(true);
   const [monthPicker, setMonthPicker] = useState<Date>(new Date(Date.now()));
+  const [monthPickerWeekly, setMonthPickerWeekly] = useState<Date>(new Date(Date.now()));
   const [selectionDist,setSelectionDist] = useState<string>('todos')
   const [selectionDistWeight,setSelectionDistWeight] = useState<string>('ambos')
+  const [dataAmountWeekly,setDataAmountWeekly] = useState<[]>([])
+  const [total6kg,setTotal6kg] = useState<number>(0)
+  const [total3kg,setTotal3kg] = useState<number>(0)
 
   const handleHighlightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setShowHighlight(event.target.checked);
@@ -186,6 +190,41 @@ export default function Dashboard() {
 
   }
 
+    async function fetchMonthWeeklyData() {
+        const response = await fetch(`/api/data?MonthWeekly=1&mes=${format(monthPickerWeekly,'yyyy-MM-dd')}`, {
+            method: "GET",
+            headers: {"Content-Type": "application/json"},
+        });
+        if (response.ok) {
+            const res = await response.json();
+
+            const formattedData = (res.data || res).map((item:any) => ({
+                ...item,
+                ventas_3kg: Number(item.ventas_3kg) || 0,
+                ventas_6kg: Number(item.ventas_6kg) || 0,
+            }));
+
+            setTotal3kg(
+                formattedData
+                    ? formattedData.reduce((acc, curr) => acc + (curr?.ventas_3kg || 0), 0)
+                    : 0
+            );
+
+            setTotal6kg(
+                formattedData
+                    ? formattedData.reduce((acc, curr) => acc + (curr?.ventas_6kg || 0), 0)
+                    : 0
+            );
+
+            setDataAmountWeekly(formattedData);
+        } else {
+            forceExpiredLogOut(response);
+            setError("Error obteniendo los datos del servidor");
+        }
+
+    }
+
+    console.log(total3kg)
   async function fetchDataMeta() {
     const response = await fetch(`/api/meta?top=1`, {
       method: "GET",
@@ -297,6 +336,7 @@ export default function Dashboard() {
     fetchStockComponents();
     fetchDistData();
     fetchDataMeta();
+    fetchMonthWeeklyData();
   }, []);
 
   useEffect(() => {
@@ -310,6 +350,27 @@ export default function Dashboard() {
     useEffect(() => {
         fetchDistData();
     }, [monthPicker,selectionDist,selectionDistWeight]);
+
+    useEffect(() => {
+        fetchMonthWeeklyData();
+    }, [monthPickerWeekly]);
+
+    const weeklySeries:any[]=[];
+    weeklySeries.push({
+        dataKey: 'ventas_3kg',
+        label: '3Kg',
+        stack: 'total', // Must match the 6kg stack key
+        color: '#f68383',
+    });
+
+    weeklySeries.push({
+        dataKey: 'ventas_6kg',
+        label: '6Kg',
+        stack: 'total', // Must match the 3kg stack key
+        color: '#ed4949',
+    });
+
+
 
   useEffect(() => {
     if(dataMeta && dataMeta.venta>=dataMeta.meta){
@@ -429,6 +490,45 @@ export default function Dashboard() {
                   <DatePicker label={'Hasta'}  slotProps={{actionBar: {actions: ['today','accept']}}} value={inicio} format={'dd/MM/yyyy'}  onChange={(newValue) => newValue && setInicio(newValue)}/>
                 </LocalizationProvider>
               </div>
+            </div>
+
+        ) : !error && (
+            <p>Cargando gráficas...</p>
+        )}
+
+        {monthPickerWeekly && dataAmountWeekly && (total3kg>=0) && (total6kg>=0) ? (
+
+            <div className="relative flex flex-col w-full 2xl:w-[540px] h-full bg-gray-300 rounded-xl p-1 outline-1 shadow-md">
+                <div className="flex gap-4 text-black mt-2 text-[20px] font-semibold items-center flex-col">
+                    <a>
+                        Ventas Semanales
+                    </a>
+                    {/* Total Monthly Sales Badge */}
+                    <div className="flex gap-3 text-sm font-medium bg-gray-200 px-3 py-1 rounded-lg border border-gray-400">
+                        <span className="text-gray-400">Totales</span>
+                        <span className="text-xs text-gray-600 flex items-center gap-1">
+                    (3Kg: <span className="font-semibold text-blue-700">{total3kg.toLocaleString()}</span> /
+                     6Kg: <span className="font-semibold text-red-700">{total6kg.toLocaleString()}</span>)
+                </span>
+                    </div>
+                </div>
+                <BarChart
+                    dataset={dataAmountWeekly}
+                    yAxis={[{
+                        valueFormatter:(number:number) => number>=1000 ? `${Math.floor(number)/1000}K` : `${number}`,
+                    }]}
+                    xAxis={[{
+                        scaleType: 'band',
+                        dataKey: 'rango_dias',
+                    }]}
+                    series={weeklySeries}
+                    className=" min-w-full min-h-[300px] max-h-[300px]"/>
+
+                <div className="flex px-3 flex-row items-start justify-center gap-2 mb-5">
+                    <LocalizationProvider adapterLocale={es} localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText} dateAdapter={AdapterDateFns}>
+                        <DatePicker label={'Mes'} value={monthPickerWeekly} views={['month','year']} onChange={(e) => {e && setMonthPickerWeekly(e)}} />
+                    </LocalizationProvider>
+                </div>
             </div>
 
         ) : !error && (

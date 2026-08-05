@@ -88,6 +88,39 @@ export async function getAllData() {
     }
 }
 
+export async function getMonthSalesByWeek(targetDate) {
+    try {
+        const formattedDate = targetDate instanceof Date
+            ? targetDate.toISOString().split('T')[0]
+            : targetDate;
+
+        const query = `
+            SELECT
+                FLOOR((DAY(fecha_correcta) - 1) / 7) + 1 AS num_semana,
+                CASE FLOOR((DAY(fecha_correcta) - 1) / 7) + 1
+                    WHEN 1 THEN '01 - 07'
+                    WHEN 2 THEN '08 - 14'
+                    WHEN 3 THEN '15 - 21'
+                    WHEN 4 THEN '22 - 28'
+                    ELSE CONCAT('29 - ', DAY(LAST_DAY(fecha_correcta)))
+                END AS rango_dias,
+                COALESCE(SUM(CASE WHEN LOWER(tipodemovimiento) LIKE '%venta%' AND LOWER(peso) LIKE '%3kg%' THEN cantidad ELSE 0 END), 0) AS ventas_3kg,
+                COALESCE(SUM(CASE WHEN LOWER(tipodemovimiento) LIKE '%venta%' AND LOWER(peso) LIKE '%6kg%' THEN cantidad ELSE 0 END), 0) AS ventas_6kg
+            FROM registrocompleto
+            WHERE fecha_correcta >= DATE_FORMAT(?, '%Y-%m-01')
+              AND fecha_correcta <= LAST_DAY(?)
+            GROUP BY num_semana, rango_dias
+            ORDER BY num_semana ASC;
+        `;
+
+        const [rows] = await pool.execute(query, [formattedDate, formattedDate]);
+        return rows;
+    } catch (err) {
+        console.error('Error executing getMonthSalesByWeek query:', err);
+        throw err;
+    }
+}
+
 export async function getTypeData(tipo: string) {
     try{
         const query = `SELECT registro_id, fecha_correcta, tipodemovimiento, cantidad, peso,hora
