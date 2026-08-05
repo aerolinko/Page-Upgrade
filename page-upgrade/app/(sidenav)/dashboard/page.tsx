@@ -206,13 +206,13 @@ export default function Dashboard() {
 
             setTotal3kg(
                 formattedData
-                    ? formattedData.reduce((acc, curr) => acc + (curr?.ventas_3kg || 0), 0)
+                    ? formattedData.reduce((acc: number, curr) => acc + (curr?.ventas_3kg || 0), 0)
                     : 0
             );
 
             setTotal6kg(
                 formattedData
-                    ? formattedData.reduce((acc, curr) => acc + (curr?.ventas_6kg || 0), 0)
+                    ? formattedData.reduce((acc: number, curr) => acc + (curr?.ventas_6kg || 0), 0)
                     : 0
             );
 
